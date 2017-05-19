@@ -1,7 +1,7 @@
 const util = require('util');
 
-const Tasks = require('./jake/tasks.js');
-const Main 	= require('./jake/main.js');
+const Tasks = require('./yake/tasks.js');
+const Main 	= require('./yake/main.js');
 
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
