@@ -1,0 +1,31 @@
+{
+  "name": "yake",
+  "version": "0.0.39",
+  "author": "Robert Blackwell",
+  "contributors": [],
+  "description": "Yet another implementation of jake - with a twist",
+  "keywords": [
+    "build",
+    "jake",
+    "rake",
+    "make"
+  ],
+  "main": "lib/jake",
+  "bin": {
+    "stringy": "bin/yake"
+  },
+  "scripts": {
+    "test": "mocha tests/test*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/robertblackwell/yake.git"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.4.1"
+  },
+  "dependencies": {
+    "es6-set": "^0.1.5"
+  }
+}
