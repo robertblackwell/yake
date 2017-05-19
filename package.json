@@ -12,7 +12,7 @@
   ],
   "main": "lib/jake",
   "bin": {
-    "stringy": "bin/yake"
+    "yake": "bin/yake"
   },
   "scripts": {
     "test": "mocha tests/test*.js"
