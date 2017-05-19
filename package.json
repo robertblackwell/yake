@@ -26,6 +26,7 @@
     "mocha": "^3.4.1"
   },
   "dependencies": {
+    "dashdash": "^1.14.1",
     "es6-set": "^0.1.5"
   }
 }
