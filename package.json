@@ -10,7 +10,7 @@
     "rake",
     "make"
   ],
-  "main": "lib/jake.js",
+  "main": "src/yake.js",
   "bin": {
     "yake": "bin/yake"
   },
