@@ -35,7 +35,7 @@ function task()
 	Tasks.defineTask(args.name, args.description, args.prereqs, args.action);
 }
 exports.run = run;
-function run()
+function run(cfg = undefined)
 {
-	Main.taskFileMain();
+	Main.taskFileMain(cfg);
 }
