@@ -29,18 +29,19 @@ function pad(s, n)
 function makeWidth(s, w)
 {
 	let s1 = s; //s.trim();
-	let s2 = (s1.length > w) ? s1/*s1.substring(0, w - 1)*/ : pad(s, w - s1.length);
+	let s2 = (s1.length > w) ? s1.substring(0, w - 1) : pad(s, w - s1.length);
 	return  s2;
 }
 
 
 function printTask(task, widthName, widthDesc)
 {
-	// const name = makeWidth(task.name(), widthName);
-	// const description = makeWidth(task.description(), widthDesc);
+	const _name = makeWidth(task.name(), widthName);
+	const _description = makeWidth(task.description(), widthDesc);
+	console.log(`_name: [${_name}] l: [${_name.length}] _desc:[${_description}] length: [${_description.length}]`);
 	const name = task.name();
 	const description = task.description();
 	const prereqs = task.prerequisites().join();
-	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}] }`;
+	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}]`;
 	console.log(line);
 }
