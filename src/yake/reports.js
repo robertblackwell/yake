@@ -18,7 +18,6 @@ function printTaskList(collection)
 	names.forEach((el, ix, ar) =>
 	{
 		const task = collection.getByName(el);
-		console.log(`task : ${el}`);
 		printTask(task, widthName, widthDesc);
 	})
 }
@@ -41,5 +40,5 @@ function printTask(task, widthName, widthDesc)
 	const description = makeWidth(task.description(), widthDesc);
 	const prereqs = task.prerequisites().join();
 	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}] }`;
-	console.log(line);
+	console.log(`${name} ${description}`);
 }
