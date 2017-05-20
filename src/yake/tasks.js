@@ -229,8 +229,8 @@ function requireTasks(yakefile, taskCollection)
 {
 	const debug = false;
 	// let taskCollection = TaskCollection.getInstance();
-	if(debug) console.log(`loadTasks: called ${jakefile}`);
-	require(jakefile);
+	if(debug) console.log(`loadTasks: called ${yakefile}`);
+	require(yakefile);
 	return taskCollection; // no copy - untidy functional programming
 }
 
