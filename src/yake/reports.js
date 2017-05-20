@@ -11,3 +11,8 @@ function printTaskList(collection)
 		printTask(task);
 	})
 }
+
+function printTask(task)
+{
+	console.log(`printTask : ${task.name()}`);
+}
