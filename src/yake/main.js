@@ -32,11 +32,11 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 		}
 		collection = TASKS.requireTasks(yakeFilePath, collection);
 	}
-	else if(mode === MODE.taskfile)
+	else if(mode === MODE.yakeTaskfile)
 	{
 
 	}
-	else if( mode === MODE.fromArray)
+	else if( mode === MODE.yakeFromArray)
 	{
 		// tasks are defined in a datascripture - load it
 		collection = TASKS.loadTasksFromArray(cfgArray, collection);
