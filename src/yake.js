@@ -5,7 +5,8 @@ const Main 	= require('./yake/main.js');
 
 const Logger = require('./yake/logger.js');
 const Shell = require('./yake/shell.js');
-const JakeError = require('./yake/error.js');
+const YakeError = require('./yake/error.js');
+console.log(require('util').inspect(YakeError))
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
  * The jakefile is then executed via the jake command line utility in the usual jake/ruby/make
