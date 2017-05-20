@@ -212,7 +212,7 @@ function loadPreloadedTasks(taskCollection)
 			console.log('this is the help task running ');
 		},
 	}];
-	let collection = loadTasksFomrArray(preloadedTasks, taskCollection)
+	let collection = loadTasksFromArray(preloadedTasks, taskCollection)
 	return collection;
 }
 
