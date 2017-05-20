@@ -1,5 +1,5 @@
 /**
- * Module for managing all operations related to finding and resolving jakefile.
+ * Module for managing all operations related to finding and resolving yakefile.
  */
 const path      = require('path');
 const fs        = require('fs');

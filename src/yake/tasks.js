@@ -71,14 +71,21 @@ function invokeTask(taskCollection, task)
 
 /**
  * invokeTask - invokes all the prerequisites for a task and then invokes the target
- *              task by calling its action property
+ *              task by calling its action property. This produces a recursive
+ *              Depth-First-Scan of the dependency tree/graph (its a directed graph)
  *
  * @param {TaskCollection}  taskCollection, collection of defined tasks
- * @param {InvocationList}  loopsList, a structure for keeping track of
+ * @param {InvocationList}  loopsList, a set structure for keeping track of
  *                          ancestors in the Depth First scan of tasks
- *                          so that loops in the dependency graph can be detected
- * @param {InvocationList}  prereqsList - a structure fro keeping track of
+ *                          so that loops in the dependency graph can be detected.
+ *                          If a task is visited and found to be already in
+ *                          this set then a loop has been detected and
+ *                          the process fails with an error message
+ * @param {InvocationList}  prereqsList - a structure for keeping track of
  *                          prereqs already executed so that we done run a prereq twice.
+ *                          The way this works a dependency that is in the dependency tree
+ *                          more than once will be invoked at its deepest level
+ *                          and not executed again.
  *
  * @param {Task}            task - the task to invoke
  *
@@ -128,6 +135,26 @@ function _invokeTask(taskCollection, loopsList, alreadyDoneList, task)
     }
 }
 
+/**
+ * Normalize the arguments passed into the task definition function.
+ * Inside a yakefile tasks are defined with a call like ...
+ *
+ * jake.task('name', 'description', ['prerequisite1', ...], function action(){})
+ *
+ * The name and action are manditory while the other two - description and [prerequisistes]
+ * are optional.
+ *
+ * This function goes through the process of determining which form was given and returns
+ * an object literal with all 4 values provided.
+ *
+ * @param {string}              name            Manditory
+ * @param {string}              description     Optional
+ * @param {array of strings}    prerequisistes  Optional
+ * @param {function}            action          Manditory
+ *
+ * @return {object}             with keys name, description, prerequisites, action
+ *
+ */
 exports.normalizeArguments = normalizeArguments;
 function normalizeArguments()
 {
@@ -200,12 +227,6 @@ function normalizeArguments()
     return args;
 }
 
-// exports.TaskCollection = TaskCollection;
-// function TaskCollection()
-// {
-
-// }
-
 /**
  * loadTaskFromArray - loads a set of tasks from a cfg structure
  * @param {array of task definitions}   - ar task definition structure
@@ -228,6 +249,13 @@ function loadTasksFromArray(ar, taskCollection)
     return taskCollection;
 }
 
+/**
+ * Yake provides for a set of standard tasks to be preloaded. This function performs that process.
+ *
+ * @param {TaskCollection}      taskCollection into which the tasks are to be loaded
+ *
+ *  @return {TaskCollection}    the same one that was passed in but updated
+ */
 exports.loadPreloadedTasks = loadPreloadedTasks;
 function loadPreloadedTasks(taskCollection)
 {
@@ -250,18 +278,21 @@ function loadPreloadedTasks(taskCollection)
 }
 
 /**
- * Loads tasks from a yakefile into taskCollection and returns the updated taskCollection
+ * Loads tasks from a yakefile into taskCollection and returns the updated taskCollection.
+ * It does this by a dynamic 'require'
+ *
  * @param {string}              yakefile - full path to yakefile - assume it exists
  * @parame {TaskCollection}     taskCollection - collection into which tasks will be placed
+ *
  * @return {TaskCollection}     update taskCollection
  */
 exports.requireTasks = requireTasks;
 function requireTasks(yakefile, taskCollection)
 {
     const debug = false;
-    // let taskCollection = TaskCollection.getInstance();
 
     if (debug) debugLog(`loadTasks: called ${yakefile}`);
+
     /* eslint-disable global-require */
     require(yakefile);
     /* eslint-disable global-require */
@@ -269,6 +300,17 @@ function requireTasks(yakefile, taskCollection)
     return taskCollection; // no copy - untidy functional programming
 }
 
+/**
+ * Define a task. Create a new Task instance from the 4 data elements
+ * and add it to the singleton TaskCollection::getInstance().
+ *
+ * NOT PURE
+ *
+ * @param {string}          name     -       Task name
+ * @param {string}          description      Task description
+ * @param {array of string} prerequisites    array of prerequisite task names
+ * @param {function}        action           function to perform the tasks work
+ */
 exports.defineTask = defineTask;
 function defineTask(name, description, prereqs, action)
 {

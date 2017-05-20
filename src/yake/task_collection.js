@@ -1,16 +1,14 @@
 const util = require('util');
 
-// const Set = require('es6-set');
-// const Task = require('./tasks.js');
-
 /**
  * TaskCollection - an instance of this structure holds tasks that have already been defined
  * and from which some can be invoked.
  *
- * The constructir TaskCollection can be called without the use of the keyword "new".
+ * The constructor TaskCollection can be called without the use of the keyword "new".
  *
- * The properties of the class are hidden as local vars inside the constructor
- * and no setter methods are provided.
+ * The properties of the class were originally hidden as local vars inside the constructor
+ * and no setter methods are provided to enforce immutability - but that makes them invisible
+ * to the debugger.
  *
  * @class      TaskCollection
  */
@@ -71,7 +69,7 @@ function TaskCollection()
  * @NOTE - TaskCollection is a singleton. In the jake/Ruby style of task definition an instance of
  * TaskCollection needs to exist during the process of defining tasks and there is nowhere
  * other than a global to hold the collection as it is being built. This is a result of the
- * tasks being defined by 'require'-ing a javascript file
+ * tasks being defined by 'require'-ing a javascript file.
  *
  */
 const theInstance = new TaskCollection();
