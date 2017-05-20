@@ -24,7 +24,7 @@ function printTaskList(collection)
 
 function pad(s, n)
 {
-	return " ".repeat(n);
+	return s + " ".repeat(n);
 }
 function makeWidth(s, w)
 {
