@@ -1,0 +1,64 @@
+#!/bin/bash
+
+function public:start {
+  rm -rf ./lib/
+  webpack --progress --colors --watch --env.fileName 'accelerate.js' --env.libName 'accelerate'
+}
+
+function public:build {
+  rm -rf ./lib/
+  webpack --progress --colors --env.fileName 'accelerate.js' --env.libName 'accelerate'
+  webpack --progress --colors -p --env.fileName 'accelerate.min.js' --env.libName 'accelerate'
+}
+
+function public:test {
+  mocha --opts './test/mocha.opts' ./test/*.js #--grep Helper
+}
+
+function public:test:watch {
+  mocha --opts './test/mocha.opts' --watch ./test/*.test.js 
+}
+
+function public:lint {
+  eslint src --max-warnings 0
+  # eslint src --fix --max-warnings 0
+}
+
+function public:lint:watch {
+  esw src --fix --watch -c ./.eslintrc.json
+}
+
+function public:publish {
+  npm publish ./
+}
+
+function public:bump_patch {
+  npm-bump patch
+}
+
+function public:bump_minor {
+  npm-bump minor
+
+}
+
+function public:bump_major {
+  npm-bump major  
+}
+
+function public:docs {
+  rm -rf ./docs && jsdoc -c ./jsdoc.json -d ./docs -R README.md src/*.js
+}
+
+# ------------------------------------------
+# DEFAULT public: list all possible commands
+#
+function public:help {
+    echo "$0 <task> <args>"
+    echo "Tasks:"
+    compgen -A function | sed -En 's/public:(.*)/\1/p' | cat -n
+}
+
+# ---------- Do NOT edit below --------------
+
+TIMEFORMAT="Task completed in %3lR"
+time "public:${@:-help}" # make help default

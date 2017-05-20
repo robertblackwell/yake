@@ -8,8 +8,8 @@ describe('mode', function(done)
 {
 	it('require', function(done)
 	{
-		console.log(util.inspect(MODE));
-		console.log(util.inspect(MODE.yakeCmd));
+		// console.log(util.inspect(MODE));
+		// console.log(util.inspect(MODE.yakeCmd));
 		done();
 	});
 });

@@ -1,50 +1,59 @@
 const process = require('process');
 const dashdash = require('dashdash');
 const util = require('util');
+
+const raiseError = require('./error.js').raiseError;
+
+function debugLog(s)
+{
+    /* eslint-disable no-console */
+    console.log(s);
+    /* eslint-ensable no-console */
+}
+
 /**
  * Quick reference for this file
  * ===============================
- * 
+ *
  * const CLI = require('cli_args.js')
- * 
- * 
- * CLI.CliParse(argv) 
- *      returns [instance of CliOptions, instance of CliArguments] 
- *      
+ *
+ *
+ * CLI.CliParse(argv)
+ *      returns [instance of CliOptions, instance of CliArguments]
+ *
  *      Parses the argv array as if it was a set of command line options and arguments
  *      and returns those options and arguments in special purpose wrapper objects.
- *                                                                        
+ *
  * CLI.CliStripNodeJake(argv)
  *      returns  array - another array of command line options and arguments but stripped
- *      of leading entries that look like 
+ *      of leading entries that look like
  *          node yake ....
  *          or
  *          yake ....
  *          or
  *          ./<somefile>.js
- *  
+ *
  *  CLI.CliOptions
- *  ============== 
+ *  ==============
  *  is a class and class factory function but you should never have to call it.
  *  Instances of this class are returned by Cli.Parse
- *          
+ *
  *  cliOptionsInstance.getValueFor(key)
  *      returns boolean | string | undefined - the value that key has in the options set
- *      
+ *
  *  cliOptionsInstance.getOptions()
  *      returns a key/value object containing all possible keys and their value or undefined
- *      
- *  
+ *
+ *
  *  CLI.CliArguments
  *  ================
  *  is a class and class factory function but you should never have to call it.
  *  Instances of this class are returned by Cli.Parse
- *          
+ *
  *  cliArgumentsInstance.getArgs()
  *      returns and array of string values representing the arguments that followed the options
- *      on the command line.        
+ *      on the command line.
  */
-
 
 /**
  * @annotation - this is deliberatly an immutable implementation to try out functional
@@ -53,36 +62,46 @@ const util = require('util');
  * CliOptions constructor. Returns an object that wraps command line option values and
  * provides two getters to acces those key/values
  *
- * @class      CliOptions               is a class that can be instantiated with or without the use of the 
+ * @class      CliOptions               is a class that can be instantiated with or without the use of the
  *                                      new keyword. It is a immutable container for the cli options
- *                                      after parsing. 
+ *                                      after parsing.
  * @param      {object of key: values}  options  The object of key/values that was parsed from the command line
  * @return     {CliOption}              new CliOptions object
  */
 module.exports.CliOptions = CliOptions;
 function CliOptions(options)
 {
-    var _options;
+    const _options = {};
     let obj;
-    if( ! (this instanceof CliOptions) )
+
+    if (!(this instanceof CliOptions))
     {
         obj = new CliOptions(options);
+
         return obj;
     }
-    _options = {};
     Object.assign(_options, options);
 
     /**
-     * Gets (a copy of) the options object in total.
+     * Gets (a copy of) the options object with only properties that have a value.
      *
      * @return     {object}  The options.
      */
-    this.getOptions = function()
+    this.getOptions = () =>
     {
-        let tmp = {};
-        Object.assign(tmp, _options);
+        const tmp = {};
+
+        Object.keys(_options).forEach((key) =>
+        {
+            if (_options[key] !== undefined)
+            {
+                tmp[key] = _options[key];
+            }
+        });
+        // Object.assign(tmp, _options);
+
         return tmp;
-    }
+    };
     /**
      * Gets the value for an option key.
      *
@@ -90,34 +109,28 @@ function CliOptions(options)
      * @return     {bool|string|undefined}  The value for.
      * @throws      if the value is not bool or string
      */
-    this.getValueFor = function(key)
+    this.getValueFor = (key) =>
     {
-        if(_options.hasOwnProperty(key))
+        if (_options.hasOwnProperty(key))
         {
-            let v = _options[key];
-            
-            let typeofv = typeof v;
+            const v = _options[key];
 
-            if( (typeofv) === 'boolean')
+            const typeofv = typeof v;
+
+            if ((typeofv) === 'boolean')
             {
                 return v;
             }
-            else if( (typeofv) === 'string')
+            else if ((typeofv) === 'string')
             {
                 return `${v}`;
             }
-            else
-            {
-                return v;
-                throw new Error(`CliOptions::getValueFor v is wrong type ${typeof v} v: ${v}`);
-            }
-        }
-        else
-        {
-            void 0; // undefined
-        }
-    }
 
+            return v;
+        }
+
+        return undefined; // undefined
+    };
 }
 /**
  * @annotation - this is deliberatly an immutable implementation to try out functional
@@ -126,7 +139,7 @@ function CliOptions(options)
  * CliArguments constructor. Wraps the arguments from a cli options arg array and wraps the
  * arguments. Provide a single getter to access the array
  *
- * @class      CliArguments         - is a class that can be instantiated with or withou the use of the 
+ * @class      CliArguments         - is a class that can be instantiated with or withou the use of the
  *                                  new keyword. It is a immutable container for the cli arguments
  *                                  after parsing.
  * @param      {array of strings}   argsArray  The arguments array
@@ -135,166 +148,178 @@ function CliOptions(options)
 module.exports.CliArguments = CliArguments;
 function CliArguments(argsArray)
 {
-    let _args;
     let obj;
-    if( ! (this instanceof CliArguments) )
+
+    if (!(this instanceof CliArguments))
     {
         obj = new CliArguments(argsArray);
+
         return obj;
     }
-    _args = argsArray.slice(); 
+    const _args = argsArray.slice();
     /**
      * Gets the arguments.
      *
      * @return     {array of strings}  A copy of the _args property.
      */
-    this.getArgs = function()
+
+    this.getArgs = () =>
     {
         return _args.slice();
-    }
+    };
 }
 /**
  * Function Cli.StripNodeJake possibly removes entries from the start of an array
  * if the look like an invocation of the form
  *  -   1.  node jake ....., or
- *  -   2.  jake ......   
+ *  -   2.  jake ......
  */
 module.exports.CliStripNodejake = CliStripNodeJake;
-function CliStripNodeJake(argvArray)
+function CliStripNodeJake(argv)
 {
-    let nodeRegex = /^(.*)\/node$/;
-    let yakeRegex = /(.*)jake(.*)$/;
-    let taskFileRegex = /\.\/(.*)\.js(\s*)$/;
-    let argsNoNode;
+    const nodeRegex = /^(.*)\/node$/;
+    const yakeRegex = /(.*)yake(.*)$/;
+    const taskFileRegex = /\.\/(.*)\.js(\s*)$/;
+    // let argsNoNode;
     let argNoNodeNoYake;
-    let argNoTaskFile;
     /**
      * Strip ['....node', '....yake'] or ['....yake'] or [./<....>.js] from the start of the argv array
      */
 
-    if(argv[0].match(nodeRegex) )
+    if (argv[0].match(nodeRegex))
     {
-        argsNoNode = argv.slice(1);
-        if(argv[1].match(nodeRegex) )
+        argNoNodeNoYake = argv.slice(1);
+        if (argv[1].match(nodeRegex))
         {
-            argNoNodeNoJake = argv[2];
+            argNoNodeNoYake = argv.slice(2);
         }
     }
-    else if(argv[0].match(yakeRegex))
+    else if (argv[0].match(yakeRegex))
     {
         argNoNodeNoYake = argv.slice(1);
     }
-    else if(argv[0].match(tskFileRegex))
+    else if (argv[0].match(taskFileRegex))
     {
         argNoNodeNoYake = argv.slice(1);
     }
     else
     {
-        argNoNodeNojake = argv.slice();        
+        argNoNodeNoYake = argv.slice();
     }
-    return argNoNodeNojake;
+
+    return argNoNodeNoYake;
 }
 
 /**
  * CliParse is a function that parses an array of command line options and arguments against the configuration
  * used by the jake build utility. The config is built into the function.
- * 
- * @param       {array}                             argv - an array of command line options and arguments 
+ *
+ * @param       {array}                             argv - an array of command line options and arguments
  *                                                  as returned by process.argv
  * @return     {tuple(CliOptions, CliAruments)}     returns 2 values via an array.length = 2
- * 
+ *
  */
 module.exports.CliParse = CliParse;
 function CliParse(argv)
 {
-        const config = [
+    const config = [
         {
-            names: ['showTasks', 'T'],
-            type: 'bool',
-            help: 'Print a list f tasks.'
+            names : ['showTasks', 'T'],
+            type : 'bool',
+            help : 'Print a list of tasks.',
         },
         {
-            names: ['version','v'],
-            type: 'bool',
-            help: 'Print tool version and exit.'
+            names : ['version', 'v'],
+            type : 'bool',
+            help : 'Print tool version and exit.',
         },
         {
-            names: ['help', 'h'],
-            type: 'bool',
-            help: 'Print this help and exit.'
+            names : ['help', 'h'],
+            type : 'bool',
+            help : 'Print this help and exit.',
         },
         {
-            names: ['silent', 's'],
-            type: 'bool',
-            help: 'Silent output. '
+            names : ['silent', 's'],
+            type : 'bool',
+            help : 'Silent output. ',
         },
         {
-            names: ['file', 'f'],
-            type: 'string',
-            help: 'File containing task definitions',
-            helpArg: 'FILE'
+            names : ['file', 'f'],
+            type : 'string',
+            help : 'File containing task definitions',
+            helpArg : 'FILE',
         },
         {
-            names: ['yakefile', 'c'],
-            type: 'string',
-            help: 'File containing task definitions',
-            helpArg: 'FILE'
-        }    
+            names : ['yakefile', 'c'],
+            type : 'string',
+            help : 'File containing task definitions',
+            helpArg : 'FILE',
+        },
     ];
-    let result = ParseWithConfig(config, argv);
+    const result = ParseWithConfig(config, argv);
+
     return result;
 }
 /**
  * ParseWithConfig - A function that parses an array of command line options and arguments
  *
- * @param      {object}                             config  The configuration
- * @param      {array}                              argv    an array of things like command line options and arguments
- * @return     {tuple(CliOptions, CliAruments)}     returns 2 values via an array.length = 2
+ * @param      {object}   config  The configuration
+ * @param      {array}    argv    an array of things like command line options and arguments
+ * @return     {array}     of CliOptions, CliAruments}   returns 2 values via an array.length = 2
  */
 function ParseWithConfig(config, argv)
 {
     const debug = false;
-    const parser = dashdash.createParser({options: config});
-    try 
+    const parser = dashdash.createParser({ options : config });
+
+    try
     {
-        let opts = parser.parse(argv, 2);
+        const opts = parser.parse(argv, 2);
+
         this.options = opts;
         const innerOptions = parser.options;
-        const keys = [];
         const keyValues = {};
         /**
          * From opts build a key/value object consting ONLY of the options keys and no extra stuff
          * Note that dashdash puts a bunch of other stuff in opts.
          * AND then wrap the keyValue object in a CliOptions object for returing
          */
-        innerOptions.forEach((element)=>
+
+        innerOptions.forEach((element) =>
         {
             const k = element.key;
-            if(debug) console.log(`loop k: ${k} v: ${opts[k]}`);
-            const v = (opts.hasOwnProperty(k)) ? opts[k] : void 0 ;
+
+            if (debug) debugLog(`loop k: ${k} v: ${opts[k]}`);
+            const v = (opts.hasOwnProperty(k)) ? opts[k] : undefined;
+
             keyValues[k] = v;
         });
         /**
          * @NOTE - the next two variables are temporary and disappear when the function is complete
          * so there is no need to copy them
          */
-        let cliOptions = CliOptions(keyValues);
-        let cliArgs = CliArguments(opts._args);
+        const cliOptions = CliOptions(keyValues);
+        const cliArgs = CliArguments(opts._args);
 
-        if(debug) console.log(util.inspect(cliOptions.getOptions()));
-        if (cliOptions.getValueFor('help') !== undefined ) 
+        if (debug) debugLog(util.inspect(cliOptions.getOptions()));
+        if (cliOptions.getValueFor('help') !== undefined)
         {
-            var help = parser.help({includeEnv: true}).trimRight();
-            console.log('usage: jake [OPTIONS]\n'
-                        + 'options:\n'
-                        + help);
+            const help = parser.help({ includeEnv : true }).trimRight();
+            /* eslint-disable no-console */
+
+            console.log(`${'usage: jake [OPTIONS]\n'
+                        + 'options:\n'}${
+                         help}`);
+            /* eslint-enable no-console */
             process.exit(0);
         }
+
         return [cliOptions, cliArgs];
-    } 
-    catch (e) 
+    }
+    catch (e)
     {
-        console.error('foo: error: %s', e.message);
+        raiseError(`Command Line Parser found an error: ${e.message}`);
+        console.error('Command Line Parser found an error: %s', e.message);
         process.exit(1);
     }
 }

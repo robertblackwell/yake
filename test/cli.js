@@ -1,11 +1,8 @@
 const util = require('util');
 const chai = require('chai');
 
-const CLI = require('../lib/jake/cli_args.js');
-const JAKE = require('../lib/jake.js');
-
-var TaskManager = require('../lib/jake/taskmanager.js').TaskManager;
-var Task = require('../lib/jake/task.js').Task;
+const CLI = require('../src/yake/cli_args.js');
+const JAKE = require('../src/yake.js');
 
 describe('cli', function(done)
 {
@@ -122,14 +119,24 @@ describe('cli', function(done)
 		})		
 
 	});
-	describe('cli parse', function()
+	describe('cli-parse', function()
 	{
-		it('simple', function()
+		it('simple', function(done)
 		{
-			let [opts, args] = CLI.CliParse([ '/usr/local/bin/node', 'jake', '--file=jakefile.js', '-T tasks', 'arg1', 'arg2']);
+			let [opts, args] = CLI.CliParse([ '/usr/local/bin/node', 'jake', '--file=yakefile.js', '-T', 'arg1', 'arg2']);
 
-			console.log(`${util.inspect(opts)}`);
-			console.log(`${util.inspect(args)}`);
+			chai.expect(opts.getValueFor('showTasks')).equals(true);
+			chai.expect(opts.getValueFor('file')).equals('yakefile.js');
+			// console.log(`${util.inspect(opts.getOptions())}`);
+			chai.expect(Object.keys(opts.getOptions()).length).equal(2);
+			// console.log(`${util.inspect(args)}`);
+			chai.expect(args.getArgs().length).equals(2);
+			chai.expect(args.getArgs()[0]).equals('arg1');
+			chai.expect(args.getArgs()[1]).equals('arg2');
+
+			// console.log(`${util.inspect(opts)}`);
+			// console.log(`${util.inspect(args)}`);
+			done();
 		});
 	});
 

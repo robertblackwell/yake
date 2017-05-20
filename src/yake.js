@@ -1,11 +1,10 @@
-const util 		= require('util');
-
 const Tasks 	= require('./yake/tasks.js');
 const Main 		= require('./yake/main.js');
 const Logger 	= require('./yake/logger.js');
 const Shell 	= require('./yake/shell.js');
 const YakeError = require('./yake/error.js');
 const MODE 		= require('./yake/mode.js');
+const raiseError = require('./yake/error.js').raiseError;
 
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
@@ -13,42 +12,42 @@ const MODE 		= require('./yake/mode.js');
  * style
  *
  */
-let currentDescription = null;
+// const currentDescription = null;
 
 /**
  * called within a jakefile - to provide a description to a task
- */
+ *
 exports.desc = desc;
 function desc(descString)
 {
 	// console.log(`_JAKE.desc ${(descString)}`);
  //    currentDescription = descString;
 }
-
+*/
 /**
  * called within a jakefile - to define a task
  */
-exports.task = task
-function task() 
+exports.task = task;
+function task()
 {
-	const args = Tasks.normalizeArguments.apply(this, arguments);
+    const args = Tasks.normalizeArguments.apply(this, arguments);
 
-	if(args === undefined)
-		throw new Error(`_jake.js::task args undefined arguments: ${arguments}`);
+    if (args === undefined)
+        { throw new Error(`_jake.js::task args undefined arguments: ${arguments}`); }
 
-	Tasks.defineTask(args.name, args.description, args.prereqs, args.action);
+    Tasks.defineTask(args.name, args.description, args.prereqs, args.action);
 }
 exports.run = run;
 function run(mode = MODE.yakeTaskfile, cfg = undefined)
 {
-	Main.taskFileMain(mode, cfg);
+    Main.taskFileMain(mode, cfg);
 }
 
 exports.abort = abort;
 function abort(message, returnCode = -1)
 {
-	error(message);
-	process.exit(returnCode)
+    raiseError(message);
+    process.exit(returnCode);
 }
- Object.assign(exports, Logger, Shell, YakeError, MODE);
+Object.assign(exports, Logger, Shell, YakeError, MODE);
 

@@ -15,15 +15,24 @@
     "yake": "bin/yake"
   },
   "scripts": {
-    "test": "mocha tests/test*.js"
+    "start": "./taskfile start",
+    "build": "./taskfile build",
+    "lint": "./taskfile lint",
+    "lint:watch": "./taskfile lint:watch",
+    "test": "./taskfile test",
+    "test:watch": "./taskfile test:watch",
+    "docs": "./taskfile docs"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com/robertblackwell/yake.git"
   },
   "devDependencies": {
+    "babel-register": "^6.24.1",
     "chai": "^3.5.0",
-    "mocha": "^3.4.1"
+    "eslint": "^3.19.0",
+    "mocha": "^3.4.1",
+    "npm-bump": "0.0.20"
   },
   "dependencies": {
     "chalk": "^1.1.3",

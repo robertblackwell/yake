@@ -3,21 +3,31 @@ const chai = require('chai');
 const process = require('process');
 const path = require('path');
 
-const TASKS = require('../lib/jake/tasks.js');
-const TC = require('../lib/jake/task_collection.js');
-const IL = require('../lib/jake/invocation_list.js');
+const TASKS = require('../src/yake/tasks.js');
+const TC = require('../src/yake/task_collection.js');
+const IL = require('../src/yake/invocation_list.js');
 
 const InvocationList = IL.InvocationList;
 const _invokeTask = TASKS._invokeTask;
-
+debugger;
 describe('loadtasks', function()
 {
 	it('first', function(done)
 	{
 		// this should trigger calls to defineTask for ever task in this file
-		let p = path.resolve(__dirname, 'data/jakefile');
-		let collection = TASKS.loadTasks(p);
-		console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
+		let p = path.resolve(__dirname, 'data/y/yakefile.js');
+		let collection = TC.getInstance();
+		collection = TASKS.requireTasks(p, collection);
+		// console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
+
+		chai.expect(typeof collection.getAll() ).equal('object');
+		chai.expect(collection.getAll() ).not.equal(null);
+		let tmp = collection.getAll();
+		chai.expect(tmp['name1'].name()).equal('name1');
+		chai.expect(tmp['name2'].name()).equal('name2');
+		chai.expect(Object.keys(tmp).length).equal(2);
+		chai.expect(Object.keys(tmp)[0]).equal('name1');
+		chai.expect(Object.keys(tmp)[1]).equal('name2');
 		done();
 	});
 	it('fromarray', function(done)
@@ -38,8 +48,17 @@ describe('loadtasks', function()
 			},
 		];
 
-		let collection = TASKS.loadTasksFromArray(config);
-		console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
+		let collection = TC.getInstance();
+		collection = TASKS.loadTasksFromArray(config, collection);
+		// console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
+		chai.expect(typeof collection.getAll() ).equal('object');
+		chai.expect(collection.getAll() ).not.equal(null);
+		let tmp = collection.getAll();
+		chai.expect(tmp['name1'].name()).equal('name1');
+		chai.expect(tmp['name2'].name()).equal('name2');
+		chai.expect(Object.keys(tmp).length).equal(2);
+		chai.expect(Object.keys(tmp)[0]).equal('name1');
+		chai.expect(Object.keys(tmp)[1]).equal('name2');
 		done();
 	});
 });
@@ -101,7 +120,8 @@ describe('invoketasks', function()
 			},					
 		];
 
-		let collection = TASKS.loadTasksFromArray(config);
+		let collection = TC.getInstance();
+		collection = TASKS.loadTasksFromArray(config, collection);
 		let loopsList = InvocationList();
 		let alreadyDoneList = InvocationList();
 		let tsk = collection.getByName('name1');
@@ -171,7 +191,8 @@ describe('invoketasks', function()
 			},					
 		];
 
-		let collection = TASKS.loadTasksFromArray(config);
+		let collection = TC.getInstance();
+		collection = TASKS.loadTasksFromArray(config, collection);
 		let loopsList = InvocationList();
 		let alreadyDoneList = InvocationList();
 		let tsk = collection.getByName('name1');
@@ -196,8 +217,6 @@ describe('arguments', function(done)
 		it('correct-4', function(done)
 		{
 			const args = TASKS.normalizeArguments('aname', 'adescription', ['some','prereqs'], function aFunc(){});
-			// console.log(util.inspect(args));
-			// console.log(util.inspect(args.name));
 
 			chai.expect(args.name).equal('aname');
 			chai.expect(args.description).equal('adescription');
@@ -209,7 +228,8 @@ describe('arguments', function(done)
 		it('correct-3-1', function(done)
 		{
 			const args = TASKS.normalizeArguments('aname', ['some','prereqs'], function aFunc(){});
-			console.log(util.inspect(args));
+
+			// console.log(util.inspect(args));
 			chai.expect(args.name).equal('aname');
 			chai.expect(args.description).equal('');
 			chai.expect(Array.isArray(args.prereqs)).equal(true);
@@ -220,7 +240,7 @@ describe('arguments', function(done)
 		it('correct-3-2', function(done)
 		{
 			const args = TASKS.normalizeArguments('aname', 'adescription', function aFunc(){});
-			console.log(util.inspect(args));
+			// console.log(util.inspect(args));
 			chai.expect(args.name).equal('aname');
 			chai.expect(args.description).equal('adescription');
 			chai.expect(Array.isArray(args.prereqs)).equal(true);
@@ -231,7 +251,7 @@ describe('arguments', function(done)
 		it('correct-2', function(done)
 		{
 			const args = TASKS.normalizeArguments('aname', function aFunc(){});
-			console.log(util.inspect(args));
+			// console.log(util.inspect(args));
 			chai.expect(args.name).equal('aname');
 			chai.expect(args.description).equal('');
 			chai.expect(Array.isArray(args.prereqs)).equal(true);

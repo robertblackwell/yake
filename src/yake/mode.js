@@ -5,9 +5,9 @@
  * 	-	where yake is part of a cli script (in js) and loads tasks using the yake.task() and related functions
 */
 
-//these are destinguished by an enumerated typeof - correspondingly
+// these are destinguished by an enumerated typeof - correspondingly
 exports.MODE = {
-	yakeCmd: 'yake_cmd',
-	yakeFromArray: 'yakeFromArray',
-	yakeTaskfile : 'yake_taskfile',
-}
+    yakeCmd : 'yake_cmd',
+    yakeFromArray : 'yakeFromArray',
+    yakeTaskfile : 'yake_taskfile',
+};
