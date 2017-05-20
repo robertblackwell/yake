@@ -42,6 +42,6 @@ function printTask(task, widthName, widthDesc)
 	const name = task.name();
 	const description = task.description();
 	const prereqs = task.prerequisites().join();
-	const line = `${chalk.reset.bold(_name)} \t ${chalk.reset.cyan(_description)} \t [${prereqs}]`;
+	const line = `${chalk.reset.cyan.bold(_name)} \t ${chalk.reset.magenta(_description)} \t [${prereqs}]`;
 	console.log(line);
 }
