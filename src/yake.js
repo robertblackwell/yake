@@ -50,5 +50,5 @@ function abort(message, returnCode = -1)
 	error(message);
 	process.exit(returnCode)
 }
- Object.assign(exports, Logger, Shell, YakeError, {MODE:MODE});
+ Object.assign(exports, Logger, Shell, YakeError, MODE);
 
