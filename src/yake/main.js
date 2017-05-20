@@ -27,7 +27,6 @@ function taskFileMain(cfg = undefined)
 
 	if( options.getValueFor('showTasks') !== undefined )
 	{
-		console.log('THIS IS THE TASK REPORT');
 		REPORTS.printTaskList(collection);
 		process.exit(0);
 	}
