@@ -19,7 +19,7 @@ function printTaskList(collection)
 	{
 		const task = collection.getByName(el);
 		console.log(`task : ${el}`);
-		printTask(task, width);
+		printTask(task, widthName, widthDesc);
 	})
 }
 
