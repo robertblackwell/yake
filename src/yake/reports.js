@@ -38,10 +38,10 @@ function printTask(task, widthName, widthDesc)
 {
 	const _name = makeWidth(task.name(), widthName);
 	const _description = makeWidth(task.description(), widthDesc);
-	console.log(`_name: [${_name}] l: [${_name.length}] _desc:[${_description}] length: [${_description.length}]`);
+	// console.log(`_name: [${_name}] l: [${_name.length}] _desc:[${_description}] length: [${_description.length}]`);
 	const name = task.name();
 	const description = task.description();
 	const prereqs = task.prerequisites().join();
-	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}]`;
+	const line = `${chalk.reset.bold(_name)} \t ${chalk.reset.cyan(_description)} \t [${prereqs}]`;
 	console.log(line);
 }
