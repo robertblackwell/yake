@@ -3,6 +3,8 @@ const util = require('util');
 const Tasks = require('./yake/tasks.js');
 const Main 	= require('./yake/main.js');
 
+const Logger = require('./logger.js');
+const Shell = require('./shell.js');
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
  * The jakefile is then executed via the jake command line utility in the usual jake/ruby/make
@@ -39,3 +41,12 @@ function run(cfg = undefined)
 {
 	Main.taskFileMain(cfg);
 }
+
+exports.abort = abort;
+function abort(message, returnCode = -1)
+{
+	error(message);
+	process.exit(returnCode)
+}
+ Object.assign(exports, Logger, Shell);
+

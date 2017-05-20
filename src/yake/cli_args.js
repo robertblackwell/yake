@@ -13,13 +13,15 @@ const util = require('util');
  *      
  *      Parses the argv array as if it was a set of command line options and arguments
  *      and returns those options and arguments in special purpose wrapper objects.
- *                                                                      -  
+ *                                                                        
  * CLI.CliStripNodeJake(argv)
  *      returns  array - another array of command line options and arguments but stripped
  *      of leading entries that look like 
- *          node jake ....
+ *          node yake ....
  *          or
- *          jake ....
+ *          yake ....
+ *          or
+ *          ./<somefile>.js
  *  
  *  CLI.CliOptions
  *  ============== 
@@ -161,11 +163,13 @@ module.exports.CliStripNodejake = CliStripNodeJake;
 function CliStripNodeJake(argvArray)
 {
     let nodeRegex = /^(.*)\/node$/;
-    let jakeRegex = /(.*)jake(.*)$/;
+    let yakeRegex = /(.*)jake(.*)$/;
+    let taskFileRegex = /\.\/(.*)\.js(\s*)$/;
     let argsNoNode;
-    let argNoNodeNoJake;
+    let argNoNodeNoYake;
+    let argNoTaskFile;
     /**
-     * Strip ['....node', '....jake'] or ['....jake'] from the start of the argv array
+     * Strip ['....node', '....yake'] or ['....yake'] or [./<....>.js] from the start of the argv array
      */
 
     if(argv[0].match(nodeRegex) )
@@ -176,9 +180,13 @@ function CliStripNodeJake(argvArray)
             argNoNodeNoJake = argv[2];
         }
     }
-    else if(argv[0].match(jakeRegex))
+    else if(argv[0].match(yakeRegex))
     {
-        argNoNodeNojake = argv.slice(1);
+        argNoNodeNoYake = argv.slice(1);
+    }
+    else if(argv[0].match(tskFileRegex))
+    {
+        argNoNodeNoYake = argv.slice(1);
     }
     else
     {
@@ -202,7 +210,7 @@ function CliParse(argv)
         const config = [
         {
             names: ['showTasks', 'T'],
-            type: 'string',
+            type: 'bool',
             help: 'Print a list f tasks.'
         },
         {
@@ -227,7 +235,7 @@ function CliParse(argv)
             helpArg: 'FILE'
         },
         {
-            names: ['jakefile', 'c'],
+            names: ['yakefile', 'c'],
             type: 'string',
             help: 'File containing task definitions',
             helpArg: 'FILE'
