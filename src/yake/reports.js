@@ -36,9 +36,11 @@ function makeWidth(s, w)
 
 function printTask(task, widthName, widthDesc)
 {
-	const name = makeWidth(task.name(), widthName);
-	const description = makeWidth(task.description(), widthDesc);
+	// const name = makeWidth(task.name(), widthName);
+	// const description = makeWidth(task.description(), widthDesc);
+	const name = task.name();
+	const description = task.description();
 	const prereqs = task.prerequisites().join();
 	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}] }`;
-	console.log(`${name} ${description}`);
+	console.log(line);
 }
