@@ -22,9 +22,9 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 		// tasks are defined using task() methods not cfg.... find jakefile and load tasks
 		collection = TC.getInstance();
 		let cwd = process.cwd();
-		let jakefileCandidates = Yakefile.defaultFilenames();
-		let jakeFilePath = Yakefile.recursiveFindFile(cwd, jakefileCandidates);
-		if( jakeFilePath === undefined )
+		let yakefileCandidates = Yakefile.defaultFilenames();
+		let yakeFilePath = Yakefile.recursiveFindFile(cwd, yakefileCandidates);
+		if( yakeFilePath === undefined )
 		{
 			let msg = yakefileCandidates.join();
 			console.log(util.inspect(yakefileCandidates));
