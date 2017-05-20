@@ -14,7 +14,7 @@ function taskFileMain(cfg = undefined)
 	// Process args early to find if the yakefile is provided on the command line
 	let [options, args] = CLI.CliParse(process.argv);
 	
-	collection = loadPreloadTasks(collection);
+	collection = TASKS.loadPreloadedTasks(collection);
 	if( cfg === undefined)
 	{
 		// tasks are defined using task() methods not cfg.... find jakefile and load tasks
