@@ -12,8 +12,8 @@ function printTaskList(collection)
 	{
 		widthName = (widthName > el.length) ? widthName : el.length;
 		const t = collection.getByName(el);
-		console.log(`name: ${el} ${t}`);
-		// widthDesc = (widthDesc > t.decription().length) ? width : t.description().length;
+		// console.log(`name: ${el} ${t}`);
+		widthDesc = (widthDesc > t.description().length) ? widthDesc : t.description().length;
 	})
 	names.forEach((el, ix, ar) =>
 	{
