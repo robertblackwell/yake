@@ -17,20 +17,20 @@ const Task = require('./tasks.js');
  */
 function TaskCollection()
 {
-	let tasks = [];
-	let taskNames = [];
-	let tasksByName = {};
+	this.tasks = [];
+	this.taskNames = [];
+	this.tasksByName = {};
 	this.addTask = function(task)
 	{
-		tasks.push(task);
-		taskNames.push(task.name());
-		tasksByName[task.name()] = task;
+		this.tasks.push(task);
+		this.taskNames.push(task.name());
+		this.tasksByName[task.name()] = task;
 	}
 	this.getByName = function(key)
 	{
-		if( tasksByName.hasOwnProperty(key) )
+		if( this.tasksByName.hasOwnProperty(key) )
 		{
-			return tasksByName[key];
+			return this.tasksByName[key];
 		}
 		else
 		{
@@ -39,25 +39,25 @@ function TaskCollection()
 	}
 	this.getAll = function()
 	{
-		return tasksByName;
+		return this.tasksByName;
 	}
 	this.getAllNames = function()
 	{
-		return taskNames.slice();
+		return this.taskNames.slice();
 	}
 	this.display = function()
 	{
-		console.log(`TaskCollection names: ${util.inspect(taskNames)} length: ${tasks.length}`);
+		console.log(`TaskCollection names: ${util.inspect(this.taskNames)} length: ${this.tasks.length}`);
 
 		for(let i = 0; i < tasks.length; i++)
 		{
-			let el = tasks[i];
+			let el = this.tasks[i];
 			console.log(`tasks[${i}]: ${util.inspect(el)}`);
-			let t = tasksByName[el.name()];
+			let t = this.tasksByName[el.name()];
 			console.log(`\tTask name:${el.name()} desc:${el.description()} prereqs: ${util.inspect(el.prerequisites())}`);
 			console.log(`\t     name:${t.name()} desc:${t.description()} prereqs: ${util.inspect(t.prerequisites())}`);
 		}
-		console.log(`TaskCollection names: ${util.inspect(taskNames)} length: ${tasks.length}`);
+		console.log(`TaskCollection names: ${util.inspect(taskNames)} length: ${this.tasks.length}`);
 	}
 }
 
