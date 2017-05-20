@@ -2,7 +2,7 @@ const CLI 		= require('./cli_args.js');
 const Yakefile 	= require('./yakefile.js');
 const TASKS 	= require('./tasks.js');
 const TC 		= require('./task_collection.js');
-const MODE 		= require('./mode.js');
+const MODE 		= require('./mode.js').MODE;
 
 const REPORTS 	= require('./reports.js');
 const path 		= require('path');
@@ -10,7 +10,7 @@ const util 		= require('util');
 
 
 exports.taskFileMain = taskFileMain;
-function taskFileMain(mode, cfgArray = undefined)
+function taskFileMain(mode = , cfgArray = undefined)
 {
 	let collection = TC.getInstance();
 	// Process args early to find if the yakefile is provided on the command line
