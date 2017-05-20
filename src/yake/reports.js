@@ -28,8 +28,8 @@ function pad(s, n)
 }
 function makeWidth(s, w)
 {
-	let s1 = s.trim();
-	let s2 = (s1.length > w) ? s1.substring(0, w) : pad(s, w - s1.length);
+	let s1 = s; //s.trim();
+	let s2 = (s1.length > w) ? s1/*s1.substring(0, w - 1)*/ : pad(s, w - s1.length);
 	return  s2;
 }
 
@@ -40,5 +40,5 @@ function printTask(task, widthName, widthDesc)
 	const description = makeWidth(task.description(), widthDesc);
 	const prereqs = task.prerequisites().join();
 	const line = `${chalk.reset.bold(name)} \t ${chalk.reset.cyan(description)} \t [${prereqs}] }`;
-	console.log(`${task.name()} ${task.description()}`);
+	console.log(`${name} ${description}`);
 }
