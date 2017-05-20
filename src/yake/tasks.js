@@ -202,17 +202,19 @@ function loadTasksFromArray(ar, taskCollection)
 exports.loadPreloadedTasks = loadPreloadedTasks;
 function loadPreloadedTasks(taskCollection)
 {
-	const preloadedTasks = [
-	{ 
-		name: 'help',
-		description: 'list all tasks',
-		prerequisites: [],
-		action: function action_help()
-		{
-			console.log('this is the help task running ');
-		},
-	}];
-	let collection = loadTasksFromArray(preloadedTasks, taskCollection)
+	const preTasks = 
+	[
+		{ 
+			name: 'help',
+			description: 'list all tasks',
+			prerequisites: [],
+			action: function action_help()
+			{
+				console.log('this is the help task running ');
+			},
+		}
+	];
+	let collection = loadTasksFromArray(preTasks, taskCollection)
 	return collection;
 }
 

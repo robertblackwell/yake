@@ -10,7 +10,7 @@ const util = require('util');
 exports.taskFileMain = taskFileMain;
 function taskFileMain(cfg = undefined)
 {
-	let collection;
+	let collection = TC.getInstance();
 	// Process args early to find if the yakefile is provided on the command line
 	let [options, args] = CLI.CliParse(process.argv);
 	
