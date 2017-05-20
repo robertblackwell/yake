@@ -2,5 +2,5 @@
 
 var YAKE = require("../src/yake/main.js");
 
-const main = YAKE.jakeFileMain;
-main();
+const main = YAKE.taskFileMain;
+main(YAKE.MODE.yakeCmd);

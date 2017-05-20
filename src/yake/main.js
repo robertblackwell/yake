@@ -34,7 +34,7 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 	}
 	else if(mode === MODE.yakeTaskfile)
 	{
-
+		// tasks will already be loaded
 	}
 	else if( mode === MODE.yakeFromArray)
 	{
@@ -76,6 +76,8 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 exports.jakeFileMain = jakeFileMain;
 function jakeFileMain()
 {
+	taskFileMain(jake.MODE.yakeCmd);
+	return;
 	// process command line early to find out if yakefile is provided on command line
 	let [options, args] = CLI.CliParse(process.argv);
 
