@@ -1,17 +1,19 @@
 const chalk = require('chalk');
 
-exports.log = log;
+exports.logger = {};
+
+exports.logger.log = log;
 function log(msg)
 {
 	console.log(chalk.green(msg));
 }
 
-exports.warn = warn;
+exports.logger.warn = warn;
 function warn(msg)
 {
 	console.log(chalk.yellow(msg));
 }
-exports.error = error;
+exports.logger.error = error;
 function error(msg)
 {
 	console.log(chalk.red(msg));
