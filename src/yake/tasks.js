@@ -200,7 +200,7 @@ function loadTasksFromArray(ar, taskCollection)
 }
 
 exports.loadPreloadedTasks = loadPreloadedTasks;
-function loadPreloadTasks(taskCollection)
+function loadPreloadedTasks(taskCollection)
 {
 	const preloadedTasks = [
 	{ 
@@ -221,7 +221,7 @@ function loadPreloadTasks(taskCollection)
  * @parame {TaskCollection}		taskCollection - collection into which tasks will be placed
  * @return {TaskCollection}		update taskCollection
  */	
-exports.requireTasks = loadTasks;
+exports.requireTasks = requireTasks;
 function requireTasks(yakefile, taskCollection)
 {
 	const debug = false;
