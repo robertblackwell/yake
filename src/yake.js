@@ -39,7 +39,7 @@ function task()
 	Tasks.defineTask(args.name, args.description, args.prereqs, args.action);
 }
 exports.run = run;
-function run(mode = MODE.taskfile, cfg = undefined)
+function run(mode = MODE.taskFile, cfg = undefined)
 {
 	Main.taskFileMain(mode, cfg);
 }
