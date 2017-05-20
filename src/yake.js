@@ -5,7 +5,7 @@ const Main 		= require('./yake/main.js');
 const Logger 	= require('./yake/logger.js');
 const Shell 	= require('./yake/shell.js');
 const YakeError = require('./yake/error.js');
-const MODE 		= require('./yake.mode.js');
+const MODE 		= require('./yake/mode.js');
 
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
