@@ -41,7 +41,7 @@ function task()
 exports.run = run;
 function run(mode = MODE.taskfile, cfg = undefined)
 {
-	Main.taskFileMain(cfg);
+	Main.taskFileMain(mode, cfg);
 }
 
 exports.abort = abort;
