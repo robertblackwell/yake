@@ -41,6 +41,10 @@ function TaskCollection()
 	{
 		return tasksByName;
 	}
+	this.getAllNames = function()
+	{
+		return taskNames.slice();
+	}
 	this.display = function()
 	{
 		console.log(`TaskCollection names: ${util.inspect(taskNames)} length: ${tasks.length}`);

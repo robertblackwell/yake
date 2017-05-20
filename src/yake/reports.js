@@ -1,5 +1,13 @@
+const TC = require('./task_collection.js');
+
 exports.printTaskList = printTaskList;
 function printTaskList(collection)
 {
-	collection.display()
+	const names = collection.getAllNames();
+	names.forEach((el, ix, ar) =>
+	{
+		const task = collection.getByName(el);
+		console.log('task : ${el}');
+		printTask(task);
+	})
 }

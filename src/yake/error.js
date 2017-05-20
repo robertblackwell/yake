@@ -1,8 +1,6 @@
 const chalk = require('chalk');
 const process = require('process');
 
-// exports.YakeError = {}
-// exports.YakeError.raiseError = raiseError;
 exports.raiseError = raiseError;
 function raiseError(msgString, returnCode = -1)
 {
