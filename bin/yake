@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var YAKE = require("../src/yake/main.js");
+const YAKE = require("../src/yake/main.js");
+const MODE = require('../src/yake/mode.js');
 
 const main = YAKE.taskFileMain;
-main(YAKE.MODE.yakeCmd);
+main(MODE.yakeCmd);
