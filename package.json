@@ -1,6 +1,6 @@
 {
   "name": "yake",
-  "version": "0.1.0",
+  "version": "0.1.1-pre",
   "author": "Robert Blackwell",
   "contributors": [],
   "description": "Yet another implementation of jake - with a twist",
