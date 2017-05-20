@@ -178,27 +178,57 @@ function normalizeArguments()
 // {
 
 // }
-exports.loadTasksFromArray = loadTasksFromArray;
-function loadTasksFromArray(ar)
-{
-	let collection = TaskCollection.getInstance();
 
+/**
+ * loadTaskFromArray - loads a set of tasks from a cfg structure
+ * @param {array of task definitions}	- ar task definition structure
+ * @parame {TaskCollection}				- taskCollection - collection into which tasks will be placed
+ * @return {TaskCollection}				- the updated singelton TaskCollection
+ * 
+ * @global - updates singelton TaskCollection
+ * 
+ */
+exports.loadTasksFromArray = loadTasksFromArray;
+function loadTasksFromArray(ar, taskCollection)
+{
 	ar.forEach( (el, index, _ar)=>
 	{
 		let task = new Task(el.name, el.description, el.prerequisites, el.action);
-		collection.addTask(task);
+		taskCollection.addTask(task);
 	});
-	return collection;
+	return taskCollection;
 }
 
+exports.requirePreloadedTasks = requirePreloadedTasks;
+function loadPreloadTasks(taskCollection)
+{
+	const preloadedTasks = [
+	{ 
+		name: 'help',
+		description: 'list all tasks',
+		prerequisites: [],
+		action: function action_help()
+		{
+			console.log('this is the help task running ');
+		},
+	}];
+	loadTasksFomrArray(preloadedTasks, taskCollection)
+}
+
+/**
+ * Loads tasks from a yakefile into taskCollection and returns the updated taskCollection
+ * @param {string} 				yakefile - full path to yakefile - assume it exists
+ * @parame {TaskCollection}		taskCollection - collection into which tasks will be placed
+ * @return {TaskCollection}		update taskCollection
+ */	
 exports.requireTasks = requireTasks;
-function requireTasks(jakefile)
+function requireTasks(yakefile, taskCollection)
 {
 	const debug = false;
-	let taskCollection = TaskCollection.getInstance();
+	// let taskCollection = TaskCollection.getInstance();
 	if(debug) console.log(`loadTasks: called ${jakefile}`);
 	require(jakefile);
-	return taskCollection;
+	return taskCollection; // no copy - untidy functional programming
 }
 
 exports.defineTask = defineTask;
