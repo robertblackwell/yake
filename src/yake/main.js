@@ -1,39 +1,45 @@
-const CLI = require('./cli_args.js');
-const Yakefile = require('./yakefile.js');
-const TASKS = require('./tasks.js');
-const TC = require('./task_collection.js');
+const CLI 		= require('./cli_args.js');
+const Yakefile 	= require('./yakefile.js');
+const TASKS 	= require('./tasks.js');
+const TC 		= require('./task_collection.js');
+const MODE 		= require('./mode.js');
 
-const REPORTS = require('./reports.js');
-const path = require('path');
-const util = require('util');
+const REPORTS 	= require('./reports.js');
+const path 		= require('path');
+const util 		= require('util');
+
 
 exports.taskFileMain = taskFileMain;
-function taskFileMain(cfg = undefined)
+function yakeMain(mode, cfgArray = undefined)
 {
 	let collection = TC.getInstance();
 	// Process args early to find if the yakefile is provided on the command line
 	let [options, args] = CLI.CliParse(process.argv);
 	
 	collection = TASKS.loadPreloadedTasks(collection);
-	if( cfg === undefined)
+	if( mode === MODE.yakeCmd)
 	{
 		// tasks are defined using task() methods not cfg.... find jakefile and load tasks
 		collection = TC.getInstance();
 		let cwd = process.cwd();
-		let jakefileCandidates = Jakefile.defaultFilenames();
-		let jakeFilePath = Jakefile.recursiveFindFile(cwd, jakefileCandidates);
+		let jakefileCandidates = Yakefile.defaultFilenames();
+		let jakeFilePath = Yakefile.recursiveFindFile(cwd, jakefileCandidates);
 		if( jakeFilePath === undefined )
 		{
-			let msg = jakefileCandidates.join();
-			console.log(util.inspect(jakefileCandidates));
-			throw new Error(`cannot find jakefile among : ${msg}`);
+			let msg = yakefileCandidates.join();
+			console.log(util.inspect(yakefileCandidates));
+			throw new Error(`cannot find yakefile among : ${msg}`);
 		}
-		collection = TASKS.requireTasks(jakeFilePath, collection);
+		collection = TASKS.requireTasks(yakeFilePath, collection);
 	}
-	else
+	else if(mode === MODE.taskfile)
+	{
+
+	}
+	else if( mode === MODE.fromArray)
 	{
 		// tasks are defined in a datascripture - load it
-		collection = TASKS.loadTasksFromArray(cfg, collection);
+		collection = TASKS.loadTasksFromArray(cfgArray, collection);
 	}
 
 	let nameOfTaskToRun = 'default';

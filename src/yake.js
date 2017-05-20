@@ -1,11 +1,11 @@
-const util = require('util');
+const util 		= require('util');
 
-const Tasks = require('./yake/tasks.js');
-const Main 	= require('./yake/main.js');
-
-const Logger = require('./yake/logger.js');
-const Shell = require('./yake/shell.js');
+const Tasks 	= require('./yake/tasks.js');
+const Main 		= require('./yake/main.js');
+const Logger 	= require('./yake/logger.js');
+const Shell 	= require('./yake/shell.js');
 const YakeError = require('./yake/error.js');
+const MODE 		= require('./yake.mode.js');
 
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
@@ -39,7 +39,7 @@ function task()
 	Tasks.defineTask(args.name, args.description, args.prereqs, args.action);
 }
 exports.run = run;
-function run(cfg = undefined)
+function run(mode = MODE.taskfile, cfg = undefined)
 {
 	Main.taskFileMain(cfg);
 }
@@ -50,5 +50,5 @@ function abort(message, returnCode = -1)
 	error(message);
 	process.exit(returnCode)
 }
- Object.assign(exports, Logger, Shell, YakeError);
+ Object.assign(exports, Logger, Shell, YakeError, {MODE:MODE});
 
