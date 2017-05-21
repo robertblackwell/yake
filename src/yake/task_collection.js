@@ -25,79 +25,53 @@ function TaskCollection(arrayOfTasks = undefined)
         return obj;
     }
     this._map = new Map();
-    // this._tasks = [];
-    // this._taskNames = [];
-    // this._tasksByName = {};
     
     if( arrayOfTasks !== undefined)
     {
         arrayOfTasks.forEach((task)=>
         {
-            // only add if name not already there
-            // if(this._taskNames.find(task.name()) === undefined )
-            if( this._tasksByName.hasOwnProperty(task.name()) === false )
-            {
-                const t = TASK.Task.copy(task);
-                add.bind(this)(t);
-            }
+            this._map.set(task.name(), task);
         })
     }
 
     function add (task)
     {
         this._map.set(task.name(), task);
-
-        // this._tasks.push(task);
-        // this._taskNames.push(task.name());
-        // this._tasksByName[task.name()] = task;
-        // this._map.set(task.name(), task);
     }
 
     this.addTask = function addTask(task)
 	{
         this._map.set(task.name(), task.clone());
-
-        // this._tasks.push(task.clone());
-        // this._taskNames.push(task.name());
-        // this._tasksByName[task.name()] = task;
-        return 
+        return this;
     };
 
     this.getByName = function getByName(key)
 	{
-        // if (this._tasksByName.hasOwnProperty(key))
         return this._map.get(key);
-
-  //       if (this._map.has(key))
-		// {
-  //           return this._map.get(key);
-  //       }
-
-  //       return undefined;
     };
 
     this.getAll = function getAll()
 	{
         return this._map;
-        // return this._tasksByName;
     };
 
     this.getAllNames = function getAllNames()
 	{
-        // return this._map.keys();
         return Array.from(this._map.keys());
-        // return this._taskNames.slice();
     };
     
     this.asArray = function asArray()
     {
         return Array.from(this._map.values());
-        // return this._tasks.slice();
     }
-    
+    this.append = function(task)
+    {
+        const tc = TaskCollection([task]);
+        return this.concat(tc);
+    }
     this.union = function concat(collection)
     {
-        const ar1 = this._tasks;
+        const ar1 = this.asArray();
         const ar2 = collection.asArray();
         const ar3 = ar1.concat(ar2);
         const obj = TaskCollection(ar3);
@@ -105,7 +79,7 @@ function TaskCollection(arrayOfTasks = undefined)
     }
     this.copy = function copy(taskCollection)
     {
-        const newCol = TaskCollection(this._tasks);
+        const newCol = TaskCollection(this.asArray());
         return newCol;
     }
 

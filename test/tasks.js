@@ -9,29 +9,34 @@ const IL = require('../src/yake/invocation_list.js');
 
 const InvocationList = IL.InvocationList;
 const _invokeTask = TASKS._invokeTask;
-
+debugger;
 describe('loadtasks', function()
 {
 	it('first', function(done)
 	{
 		// this should trigger calls to defineTask for ever task in this file
 		let p = path.resolve(__dirname, 'data/y/yakefile.js');
+
+		// this is the critical use of the singleton
 		let collection = TC.getInstance();
+		// let collection = TC.TaskCollection([]);
+		
 		collection = TASKS.requireTasks(p, collection);
 		// console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
 
 		chai.expect(typeof collection.getAll() ).equal('object');
 		chai.expect(collection.getAll() ).not.equal(null);
 		let tmp = collection.getAll();
-		chai.expect(tmp['name1'].name()).equal('name1');
-		chai.expect(tmp['name2'].name()).equal('name2');
-		chai.expect(Object.keys(tmp).length).equal(2);
-		chai.expect(Object.keys(tmp)[0]).equal('name1');
-		chai.expect(Object.keys(tmp)[1]).equal('name2');
+		chai.expect(tmp.get('name1').name()).equal('name1');
+		chai.expect(tmp.get('name2').name()).equal('name2');
+		chai.expect(collection.asArray().length).equal(2);
+		chai.expect(collection.getAllNames()[0]).equal('name1');
+		chai.expect(collection.getAllNames()[1]).equal('name2');
 		done();
 	});
 	it('fromarray', function(done)
 	{
+		debugger;
 		// this is an easier way to test
 		const config = [
 			{
@@ -48,17 +53,17 @@ describe('loadtasks', function()
 			},
 		];
 
-		let collection = TC.getInstance();
+		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
-		// console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
+
 		chai.expect(typeof collection.getAll() ).equal('object');
 		chai.expect(collection.getAll() ).not.equal(null);
 		let tmp = collection.getAll();
-		chai.expect(tmp['name1'].name()).equal('name1');
-		chai.expect(tmp['name2'].name()).equal('name2');
-		chai.expect(Object.keys(tmp).length).equal(2);
-		chai.expect(Object.keys(tmp)[0]).equal('name1');
-		chai.expect(Object.keys(tmp)[1]).equal('name2');
+		chai.expect(tmp.get('name1').name()).equal('name1');
+		chai.expect(tmp.get('name2').name()).equal('name2');
+		chai.expect(collection.asArray().length).equal(2);
+		chai.expect(collection.asArray()[0].name()).equal('name1');
+		chai.expect(collection.asArray()[1].name()).equal('name2');
 		done();
 	});
 });
@@ -120,8 +125,9 @@ describe('invoketasks', function()
 			},					
 		];
 
-		let collection = TC.getInstance();
+		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
+
 		let loopsList = InvocationList();
 		let alreadyDoneList = InvocationList();
 		let tsk = collection.getByName('name1');
@@ -191,7 +197,7 @@ describe('invoketasks', function()
 			},					
 		];
 
-		let collection = TC.getInstance();
+		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
 		let loopsList = InvocationList();
 		let alreadyDoneList = InvocationList();

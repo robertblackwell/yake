@@ -335,24 +335,38 @@ function requireTasks(yakefile, taskCollection)
 /**
  * Define a task. Create a new Task instance from the 4 data elements
  * and add it to the singleton TaskCollection::getInstance().
+ * and create a new collection consisting of the old collection and the
+ * new task
  *
  * NOT PURE
  *
+ * @param {TaskCollection}  taskCollection  
  * @param {string}          name     -       Task name
  * @param {string}          description      Task description
  * @param {array of string} prerequisites    array of prerequisite task names
  * @param {function}        action           function to perform the tasks work
+ * 
+ * @return a collection with the additional task
+ * 
  */
 exports.defineTask = defineTask;
-function defineTask(name, description, prereqs, action)
+function defineTask(taskCollection, name, description, prereqs, action)
 {
+    const immutable = false;
     const debug = false;
 
     if (debug) debugLog(`defineTask: ${name} ${description} ${util.inspect(prereqs)} ${util.inspect(action)}`);
     const task = Task(name, description, prereqs, action);
-    const taskCollection = TaskCollection.getInstance();
-
-    taskCollection.addTask(task);
-    if (debug) debugLog(`defineTask: task: ${util.inspect(task)}`);
-    // add task to task collection
+    if(! immutable)
+    {
+        const taskCollection = TaskCollection.getInstance();
+        taskCollection.addTask(task);
+    }
+    else
+    {
+        const newTaskCollection = taskCollection.append(task);
+        if (debug) debugLog(`defineTask: task: ${util.inspect(task)}`);
+        // add task to task collection
+        return newTaskCollection;
+    }
 }
