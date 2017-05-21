@@ -5,6 +5,7 @@ const TC 		= require('./task_collection.js');
 const MODE 		= require('./mode.js').MODE;
 
 const REPORTS 	= require('./reports.js');
+const ERROR     = require('./error.js')
 // const util 		= require('util');
 
 /**
@@ -44,7 +45,7 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
             const msg = yakefileCandidates.join();
 
             // console.log(util.inspect(yakefileCandidates));
-            throw new Error(`cannot find yakefile among : ${msg}`);
+            ERROR.raiseError(`cannot find yakefile among : ${msg}`);
         }
         collection = TASKS.requireTasks(yakeFilePath, collection);
     }
@@ -78,7 +79,7 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
     if (firstTask === undefined)
 	{
         // console.log('ERROR');
-        throw new Error(`task ${nameOfTaskToRun} not found`);
+        ERROR.raiseError(`task ${nameOfTaskToRun} not found`);
     }
 
     TASKS.invokeTask(collection, firstTask);

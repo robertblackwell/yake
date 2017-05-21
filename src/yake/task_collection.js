@@ -67,7 +67,7 @@ function TaskCollection(arrayOfTasks = undefined)
     this.append = function(task)
     {
         const tc = TaskCollection([task]);
-        return this.concat(tc);
+        return this.union(tc);
     }
     this.union = function concat(collection)
     {
@@ -77,7 +77,7 @@ function TaskCollection(arrayOfTasks = undefined)
         const obj = TaskCollection(ar3);
         return obj;
     }
-    this.copy = function copy(taskCollection)
+    this.copy = function copy()
     {
         const newCol = TaskCollection(this.asArray());
         return newCol;
@@ -112,11 +112,11 @@ function TaskCollection(arrayOfTasks = undefined)
  * tasks being defined by 'require'-ing a javascript file.
  *
  */
-const theInstance = TaskCollection();
+// const theInstance = TaskCollection();
 
-exports.getInstance = getInstance;
-function getInstance()
-{
-    return theInstance;
-}
+// exports.getInstance = getInstance;
+// function getInstance()
+// {
+//     return theInstance;
+// }
 

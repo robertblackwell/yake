@@ -28,18 +28,18 @@ function InvocationList()
         return obj;
     }
 
-    const set = new Set([]);
+    this._set = new Set([]);
 
     this.addTask = function addTask(task)
 	{
-        set.add(task.name());
+        this._set.add(task.name());
     };
     this.hasTask = function hasTask(task)
 	{
-        return set.has(task.name());
+        return this._set.has(task.name());
     };
     this.removeTask = function removeTask(task)
 	{
-        return set.delete(task.name());
+        return this._set.delete(task.name());
     };
 }

@@ -25,13 +25,21 @@ function task()
     const args = Tasks.normalizeArguments.apply(this, arguments);
 
     if (args === undefined)
-        { throw new Error(`_Yake.js::task args undefined arguments: ${arguments}`); }
+        { raiseError(`_Yake.js::task args undefined arguments: ${arguments}`); }
 
-    const taskCollection = TC.getInstance();
+    /**
+     * @NOTE - using a global - see notes in tasks.js for explanation
+     *
+     */
+    const tc = Tasks.globals.globalTaskCollection;
     
-    const mtc = Main.globalTaskCollection;
-debugger;
-    Tasks.defineTask(taskCollection, args.name, args.description, args.prereqs, args.action);
+    const tc2 = Tasks.defineTask(tc, args.name, args.description, args.prereqs, args.action);
+    /**
+     * @NOTE - using a global - see notes in tasks.js for explanation
+     *
+     */    
+     Tasks.globals.globalTaskCollection = tc2;
+
 }
 /**
  * called within a yake task's action function to abort task processing

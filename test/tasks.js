@@ -17,21 +17,20 @@ describe('loadtasks', function()
 		// this should trigger calls to defineTask for ever task in this file
 		let p = path.resolve(__dirname, 'data/y/yakefile.js');
 
-		// this is the critical use of the singleton
-		let collection = TC.getInstance();
-		// let collection = TC.TaskCollection([]);
-		
-		collection = TASKS.requireTasks(p, collection);
+		let collection = TC.TaskCollection([]);
+
+		let collection2 = TASKS.loadPreloadedTasks(collection);
+
+		let collection3 = TASKS.requireTasks(p, collection2);
 		// console.log(`taskCollection: ${util.inspect(collection.getAll())}`);
 
-		chai.expect(typeof collection.getAll() ).equal('object');
-		chai.expect(collection.getAll() ).not.equal(null);
-		let tmp = collection.getAll();
+		chai.expect(typeof collection3.getAll() ).equal('object');
+		chai.expect(collection3.getAll() ).not.equal(null);
+		let tmp = collection3.getAll();
+		chai.expect(tmp.get('help').name()).equal('help');
 		chai.expect(tmp.get('name1').name()).equal('name1');
 		chai.expect(tmp.get('name2').name()).equal('name2');
-		chai.expect(collection.asArray().length).equal(2);
-		chai.expect(collection.getAllNames()[0]).equal('name1');
-		chai.expect(collection.getAllNames()[1]).equal('name2');
+		chai.expect(collection3.asArray().length).equal(3);
 		done();
 	});
 	it('fromarray', function(done)
@@ -196,7 +195,7 @@ describe('invoketasks', function()
 				},
 			},					
 		];
-
+debugger;
 		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
 		let loopsList = InvocationList();
