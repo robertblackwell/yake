@@ -28,7 +28,9 @@ function task()
         { throw new Error(`_Yake.js::task args undefined arguments: ${arguments}`); }
 
     const taskCollection = TC.getInstance();
-
+    
+    const mtc = Main.globalTaskCollection;
+debugger;
     Tasks.defineTask(taskCollection, args.name, args.description, args.prereqs, args.action);
 }
 /**

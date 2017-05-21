@@ -7,13 +7,24 @@ const MODE 		= require('./mode.js').MODE;
 const REPORTS 	= require('./reports.js');
 // const util 		= require('util');
 
-
-exports.taskCollection = undefined;
+/**
+ * These two functions manage the access.update of a global task collection
+ * variable
+ */
+exports.globalTaskCollection = undefined;
+exports.getTaskCollection()
+{
+    return taskCollection;
+}
+exports.setTaskCollectioni(tc)
+{
+    taskCollection = tc;
+}
 
 exports.taskFileMain = taskFileMain;
 function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 {
-    taskCollection = TC.TaskCollection();
+    globalTaskCollection = TC.TaskCollection();
     
     let collection = TC.getInstance();
 	// Process args early to find if the yakefile is provided on the command line
