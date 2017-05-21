@@ -12,7 +12,7 @@ const ERROR     = require('./error.js')
 exports.taskFileMain = taskFileMain;
 function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 {
-    let collection = TaskCollection();
+    let collection = TC.TaskCollection();
 
 	// Process args early to find if the yakefile is provided on the command line
     const [options, args] = CLI.CliParse(process.argv);
