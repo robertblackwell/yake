@@ -25,9 +25,9 @@ function TaskCollection(arrayOfTasks = undefined)
         return obj;
     }
     this._map = new Map();
-    this._tasks = [];
-    this._taskNames = [];
-    this._tasksByName = {};
+    // this._tasks = [];
+    // this._taskNames = [];
+    // this._tasksByName = {};
     
     if( arrayOfTasks !== undefined)
     {
@@ -47,19 +47,19 @@ function TaskCollection(arrayOfTasks = undefined)
     {
         this._map.set(task.name(), task);
 
-        this._tasks.push(task);
-        this._taskNames.push(task.name());
-        this._tasksByName[task.name()] = task;
-        this._map.set(task.name(), task);
+        // this._tasks.push(task);
+        // this._taskNames.push(task.name());
+        // this._tasksByName[task.name()] = task;
+        // this._map.set(task.name(), task);
     }
 
     this.addTask = function addTask(task)
 	{
         this._map.set(task.name(), task.clone());
 
-        this._tasks.push(task.clone());
-        this._taskNames.push(task.name());
-        this._tasksByName[task.name()] = task;
+        // this._tasks.push(task.clone());
+        // this._taskNames.push(task.name());
+        // this._tasksByName[task.name()] = task;
         return 
     };
 
@@ -68,17 +68,18 @@ function TaskCollection(arrayOfTasks = undefined)
         // if (this._tasksByName.hasOwnProperty(key))
         return this._map.get(key);
 
-        if (this._map.has(key))
-		{
-            return this._map.get(key);
-        }
+  //       if (this._map.has(key))
+		// {
+  //           return this._map.get(key);
+  //       }
 
-        return undefined;
+  //       return undefined;
     };
 
     this.getAll = function getAll()
 	{
-        return this._tasksByName;
+        return this._map;
+        // return this._tasksByName;
     };
 
     this.getAllNames = function getAllNames()
