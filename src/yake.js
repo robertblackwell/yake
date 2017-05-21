@@ -1,5 +1,5 @@
 const Tasks 	= require('./yake/tasks.js');
-const TC 		= require('./task_collection.js');
+const TC 		= require('./yake/task_collection.js');
 const Main 		= require('./yake/main.js');
 const Logger 	= require('./yake/logger.js');
 const Shell 	= require('./yake/shell.js');
