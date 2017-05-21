@@ -12,11 +12,11 @@ const REPORTS 	= require('./reports.js');
  * variable
  */
 exports.globalTaskCollection = undefined;
-exports.getTaskCollection()
+exports.getTaskCollection = function()
 {
     return taskCollection;
 }
-exports.setTaskCollectioni(tc)
+exports.setTaskCollectioni = function(tc)
 {
     taskCollection = tc;
 }
