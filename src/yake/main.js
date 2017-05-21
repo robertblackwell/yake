@@ -7,9 +7,14 @@ const MODE 		= require('./mode.js').MODE;
 const REPORTS 	= require('./reports.js');
 // const util 		= require('util');
 
+
+exports.taskCollection = undefined;
+
 exports.taskFileMain = taskFileMain;
 function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 {
+    taskCollection = TC.TaskCollection();
+    
     let collection = TC.getInstance();
 	// Process args early to find if the yakefile is provided on the command line
     const [options, args] = CLI.CliParse(process.argv);

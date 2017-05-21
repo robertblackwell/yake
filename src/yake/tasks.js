@@ -25,10 +25,22 @@ function Task(name, description, prerequisites, action)
 
         return obj;
     }
-    this._name = name;
-    this._description = description;
-    this._prerequisites = prerequisites.slice();
-    this._action = action;
+    if( name instanceof Task)
+    {
+        const tsk = name();
+        this._name = tsk.name();
+        this._description = tsk.description();
+        this._prerequisites = tsk.prerequisites.slice();
+        this._action = tsk.action();        
+    }
+    else
+    {
+        this._name = name;
+        this._description = description;
+        this._prerequisites = prerequisites.slice();
+        this._action = action;
+    }
+
 
     this.name = function name()
     {
@@ -46,6 +58,13 @@ function Task(name, description, prerequisites, action)
     {
         return this._action;
     };
+    this.clone = function clone()
+    {
+        let cpy = {};
+        Object.assign(cpy, this);
+        return cpy;
+    }
+
     this.toString = function toString()
     {
         return `name:${this._name} `
@@ -60,6 +79,19 @@ function Task(name, description, prerequisites, action)
         /* eslint-enable no-console */
     };
 }
+Task.copy = function TaskCopy(task)
+{
+    return Task(task.name(), task.description(), task.prerequisites(), task.action());
+}
+
+
+exports.taskFromTask;
+function taskFromTask(task)
+{
+    return Task(task.name(), task.description(), task.prerequisistes(), task.action());
+}
+
+
 exports.invokeTask = invokeTask;
 function invokeTask(taskCollection, task)
 {

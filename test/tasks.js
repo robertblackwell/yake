@@ -9,7 +9,7 @@ const IL = require('../src/yake/invocation_list.js');
 
 const InvocationList = IL.InvocationList;
 const _invokeTask = TASKS._invokeTask;
-debugger;
+
 describe('loadtasks', function()
 {
 	it('first', function(done)
@@ -209,6 +209,29 @@ describe('invoketasks', function()
 	});	
 
 });
+describe('copy', function()
+{
+
+	// trying to show/test immutability during copy creation
+	it('copytask', function()
+	{
+		let name = 'aname';
+		const description = 'adescription';
+		const prereqs = ['p1', 'p2'];
+		const action = function _action(){};
+		const task1 = TASKS.Task(name, description, prereqs, action);
+		name = 'name2';
+
+		// changing name after creation does not change object
+		chai.expect('aname').equal(task1.name());
+
+		const task2 = TASKS.Task.copy(task1);
+
+		task1._name = 'anothername'; //cheat
+		chai.expect('anothername').equal(task1.name()); // we did cheat and change task1.name()
+		chai.expect('aname').equal(task2.name()); // but it did not change task2.name()
+	})
+})
 
 describe('arguments', function(done)
 {
