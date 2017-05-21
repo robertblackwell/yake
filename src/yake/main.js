@@ -8,26 +8,12 @@ const REPORTS 	= require('./reports.js');
 const ERROR     = require('./error.js')
 // const util 		= require('util');
 
-/**
- * These two functions manage the access.update of a global task collection
- * variable
- */
-exports.globalTaskCollection = undefined;
-exports.getTaskCollection = function()
-{
-    return taskCollection;
-}
-exports.setTaskCollectioni = function(tc)
-{
-    taskCollection = tc;
-}
 
 exports.taskFileMain = taskFileMain;
 function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 {
-    globalTaskCollection = TC.TaskCollection();
-    
-    let collection = TC.getInstance();
+    let collection = TaskCollection();
+
 	// Process args early to find if the yakefile is provided on the command line
     const [options, args] = CLI.CliParse(process.argv);
 
@@ -35,7 +21,7 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
     if (mode === MODE.yakeCmd)
 	{
 		// tasks are defined using task() methods not cfg.... find yakefile and load tasks
-        collection = TC.getInstance();
+
         const cwd = process.cwd();
         const yakefileCandidates = Yakefile.defaultFilenames();
         const yakeFilePath = Yakefile.recursiveFindFile(cwd, yakefileCandidates);
