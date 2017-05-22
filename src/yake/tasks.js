@@ -86,14 +86,6 @@ Task.copy = function TaskCopy(task)
     return Task(task.name(), task.description(), task.prerequisites(), task.action());
 }
 
-
-exports.taskFromTask;
-function taskFromTask(task)
-{
-    return Task(task.name(), task.description(), task.prerequisistes(), task.action());
-}
-
-
 exports.invokeTask = invokeTask;
 function invokeTask(taskCollection, task)
 {

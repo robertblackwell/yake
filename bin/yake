@@ -3,5 +3,5 @@
 const YAKE = require("../src/yake/main.js");
 const MODE = require('../src/yake/mode.js').MODE;
 
-const main = YAKE.taskFileMain;
+const main = YAKE.Main;
 main(MODE.yakeCmd);

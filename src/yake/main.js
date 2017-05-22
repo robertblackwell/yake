@@ -9,13 +9,18 @@ const ERROR     = require('./error.js')
 // const util 		= require('util');
 
 
-exports.taskFileMain = taskFileMain;
-function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
+exports.Main = Main;
+function Main(argv, cwd, mode = MODE.taskFile, cfgArray = undefined)
 {
     let collection;
+    
+    if( cwd === undefined)
+        cwd = process.cwd();
+    if( argv === undefined )
+        argv = process.argv
 
 	// Process args early to find if the yakefile is provided on the command line
-    const [options, args] = CLI.CliParse(process.argv);
+    const [options, args] = CLI.CliParse(argv);
 
     if (mode === MODE.yakeCmd)
 	{
@@ -25,7 +30,6 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
         //preload 
         const tc2 = TASKS.loadPreloadedTasks(tc1);
 
-        const cwd = process.cwd();
         const yakefileCandidates = Yakefile.defaultFilenames();
         const yakeFilePath = Yakefile.recursiveFindFile(cwd, yakefileCandidates);
 
@@ -90,5 +94,5 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 exports.yakeFileMain = yakeFileMain;
 function yakeFileMain()
 {
-    taskFileMain(MODE.yakeCmd);
+    Main(MODE.yakeCmd);
 }
