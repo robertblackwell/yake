@@ -276,12 +276,8 @@ function loadTasksFromArray(ar, taskCollection)
     let tc = taskCollection.copy();
     ar.forEach((el) =>
     {
-        const task = new Task(el.name, el.description, el.prerequisites, el.action);
-
-        // taskCollection.addTask(task);
-        const newTaskCollection = tc.append(task);
+        const newTaskCollection = defineTask(tc, el.name, el.description, el.prerequisites, el.action);
         tc = newTaskCollection;
-
     });
 
     return tc;
