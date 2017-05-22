@@ -382,6 +382,9 @@ function defineTask(taskCollection, name, description, prereqs, action)
     }
     else
     {
+        if( taskCollection === undefined )
+            taskCollection = TC.TaskCollection([]);
+        
         const newTaskCollection = taskCollection.append(task);
         if (debug) debugLog(`defineTask: task: ${util.inspect(task)}`);
         // add task to task collection
