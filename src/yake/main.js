@@ -20,10 +20,10 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
     if (mode === MODE.yakeCmd)
 	{
 		// tasks are defined using task() methods not cfg.... find yakefile and load tasks
-        // first create an empty collection 
-        collection = TC.TaskCollection();
+        // first create an empty collection - dont need to use the global collection
+        const tc1 = TC.TaskCollection();
         //preload 
-        collection = TASKS.loadPreloadedTasks(collection);
+        const tc2 = TASKS.loadPreloadedTasks(tc1);
 
         const cwd = process.cwd();
         const yakefileCandidates = Yakefile.defaultFilenames();
@@ -36,22 +36,23 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
             // console.log(util.inspect(yakefileCandidates));
             ERROR.raiseError(`cannot find yakefile among : ${msg}`);
         }
-        collection = TASKS.requireTasks(yakeFilePath, collection);
+        collection = TASKS.requireTasks(yakeFilePath, tc2);
     }
     else if (mode === MODE.yakeTaskfile)
 	{
-		// tasks will already be loaded and are in the global
-        collection = TASKS.globals.globalTaskCollection; 
+		// tasks will already be loaded and are in the global collection so get it
+        const tc = TASKS.globals.globalTaskCollection; 
         //this time the preloads come after the custom tasks
-        collection = TASKS.loadPreloadedTasks(collection);
+        collection = TASKS.loadPreloadedTasks(tc);
+
     }
     else if (mode === MODE.yakeFromArray)
 	{
-        collection = TC.TaskCollection();
+        const tc = TC.TaskCollection();
 		// tasks are defined in a datascripture - load it
-        collection = TASKS.loadTasksFromArray(cfgArray, collection);
+        const tc2 = TASKS.loadTasksFromArray(cfgArray, tc);
         //this time the preloads come after the custom tasks
-        collection = TASKS.loadPreloadedTasks(collection);
+        collection = TASKS.loadPreloadedTasks(tc2);
     }
 
     let nameOfTaskToRun = 'default';
