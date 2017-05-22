@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const jake = require('jake_run.js');
+const yake = require('../src/yake.js');
 
 const tasks = [
 	{ 
@@ -31,5 +31,5 @@ const tasks = [
 	},
 ];
 
-jake.run(tasks);
+yake.run(yake.MODE.yakeFromArray, tasks);
 

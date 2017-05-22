@@ -8,6 +8,6 @@
 // these are destinguished by an enumerated typeof - correspondingly
 exports.MODE = {
     yakeCmd : 'yake_cmd',
-    yakeFromArray : 'yakeFromArray',
+    yakeFromArray : 'yake_from_array',
     yakeTaskfile : 'yake_taskfile',
 };

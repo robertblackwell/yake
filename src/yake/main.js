@@ -11,7 +11,7 @@ const process   = require('process');
 
 
 exports.Main = Main;
-function Main(argv, cwd, mode = MODE.taskFile, cfgArray = undefined)
+function Main(argv, cwd, mode = MODE.yakeTaskfile, cfgArray = undefined)
 {
     let collection;
     
