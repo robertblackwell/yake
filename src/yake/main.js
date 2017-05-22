@@ -12,15 +12,18 @@ const ERROR     = require('./error.js')
 exports.taskFileMain = taskFileMain;
 function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
 {
-    let collection = TC.TaskCollection();
+    let collection;
 
 	// Process args early to find if the yakefile is provided on the command line
     const [options, args] = CLI.CliParse(process.argv);
 
-    collection = TASKS.loadPreloadedTasks(collection);
     if (mode === MODE.yakeCmd)
 	{
 		// tasks are defined using task() methods not cfg.... find yakefile and load tasks
+        // first create an empty collection 
+        collection = TC.TaskCollection();
+        //preload 
+        collection = TASKS.loadPreloadedTasks(collection);
 
         const cwd = process.cwd();
         const yakefileCandidates = Yakefile.defaultFilenames();
@@ -37,12 +40,18 @@ function taskFileMain(mode = MODE.taskFile, cfgArray = undefined)
     }
     else if (mode === MODE.yakeTaskfile)
 	{
-		// tasks will already be loaded
+		// tasks will already be loaded and are in the global
+        collection = TASKS.globals.globalTaskCollection; 
+        //this time the preloads come after the custom tasks
+        collection = TASKS.loadPreloadedTasks(collection);
     }
     else if (mode === MODE.yakeFromArray)
 	{
+        collection = TC.TaskCollection();
 		// tasks are defined in a datascripture - load it
         collection = TASKS.loadTasksFromArray(cfgArray, collection);
+        //this time the preloads come after the custom tasks
+        collection = TASKS.loadPreloadedTasks(collection);
     }
 
     let nameOfTaskToRun = 'default';
