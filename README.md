@@ -41,7 +41,8 @@ And finally things I might get it to do eventually if I find the need:
 
 -	have `watch` tasks built in
 -	async tasks
-- 	passing arguments from the command line through to task action functions
+- 	passing arguments from the command line through to task action functions as parameters
+-	multiple task names as arguments to the yake command
 
 ## Install
 
