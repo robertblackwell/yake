@@ -1,6 +1,7 @@
 const util = require('util');
 
 const TaskCollection = require('./task_collection.js');
+const TC = TaskCollection;
 const InvocationList = require('./invocation_list.js').InvocationList;
 const ERROR          = require('./error.js');
 /**
@@ -384,7 +385,7 @@ function defineTask(taskCollection, name, description, prereqs, action)
     {
         if( taskCollection === undefined )
             taskCollection = TC.TaskCollection([]);
-        
+
         const newTaskCollection = taskCollection.append(task);
         if (debug) debugLog(`defineTask: task: ${util.inspect(task)}`);
         // add task to task collection
