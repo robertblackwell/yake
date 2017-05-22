@@ -33,16 +33,16 @@ function public:publish {
 }
 
 function public:bump_patch {
-  npm-bump patch
+  ./node_modules/.bin/npm-bump patch
 }
 
 function public:bump_minor {
-  npm-bump minor
+  ./node_modules/.bin/npm-bump minor
 
 }
 
 function public:bump_major {
-  npm-bump major  
+  ./node_modules/.bin/npm-bump major  
 }
 
 function public:docs {
