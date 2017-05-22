@@ -57,7 +57,7 @@ function abort(message, returnCode = -1)
 exports.run = run;
 function run(mode = MODE.yakeTaskfile, cfg = undefined)
 {
-    Main.taskFileMain(mode, cfg);
+    Main.Main(mode, cfg);
 }
 
 

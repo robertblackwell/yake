@@ -6,6 +6,7 @@ const MODE 		= require('./mode.js').MODE;
 
 const REPORTS 	= require('./reports.js');
 const ERROR     = require('./error.js')
+const process   = require('process');
 // const util 		= require('util');
 
 
