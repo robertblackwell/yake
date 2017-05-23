@@ -5,10 +5,10 @@ const path = require('path');
 
 const TASKS = require('../src/yake/tasks.js');
 const TC = require('../src/yake/task_collection.js');
-const IL = require('../src/yake/invocation_list.js');
 
-const InvocationList = IL.InvocationList;
 const _invokeTask = TASKS._invokeTask;
+const invokeTask = TASKS.invokeTask;
+
 debugger;
 describe('loadtasks', function()
 {
@@ -127,10 +127,10 @@ describe('invoketasks', function()
 		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
 
-		let loopsList = InvocationList();
-		let alreadyDoneList = InvocationList();
+		let loopsSet = new Set();
+		let alreadyDoneSet = new Set();
 		let tsk = collection.getByName('name1');
-		_invokeTask(collection, loopsList, alreadyDoneList, collection.getByName('name1'));
+		_invokeTask(collection, loopsSet, alreadyDoneSet, collection.getByName('name1'));
 		chai.expect(var1).equals('name1 got here')
 		chai.expect(var2).equals('name2 got here')
 		chai.expect(var3).equals('name3 got here')
@@ -198,12 +198,10 @@ describe('invoketasks', function()
 debugger;
 		let collection = TC.TaskCollection([]);
 		collection = TASKS.loadTasksFromArray(config, collection);
-		let loopsList = InvocationList();
-		let alreadyDoneList = InvocationList();
 		let tsk = collection.getByName('name1');
 		let f = ()=>
 		{
-			_invokeTask(collection, loopsList, alreadyDoneList, collection.getByName('name1'));
+			invokeTask(collection, collection.getByName('name1'));
 		}
 		chai.assert.throws(f, Error, "circular dependency");
 		/**

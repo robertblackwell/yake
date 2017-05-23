@@ -1,9 +1,8 @@
 const util = require('util');
 
 const TC                = require('./task_collection.js');
-const IC                = require('./invocation_list.js');
-const InvocationList    = IC.InvocationList;
 const ERROR             = require('./error.js');
+
 /**
  * This file contains functions and object related to the loading of the jakefile
  */
@@ -110,8 +109,8 @@ Task.copy = function TaskCopy(task)
 
 function invokeTask(taskCollection, task)
 {
-    let loopsSet = Set();
-    let alreadyDoneSet = Set();
+    let loopsSet = new Set();
+    let alreadyDoneSet = new Set();
 
     _invokeTask(taskCollection, loopsSet, alreadyDoneSet, task);
 }
