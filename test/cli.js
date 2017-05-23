@@ -1,9 +1,10 @@
+debugger;
 const util = require('util');
 const chai = require('chai');
 
 const CLI = require('../src/yake/cli_args.js');
 const JAKE = require('../src/yake.js');
-
+debugger;
 describe('cli', function(done)
 {
 	describe('cli-options', function()

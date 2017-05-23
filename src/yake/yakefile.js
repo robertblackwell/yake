@@ -4,20 +4,25 @@
 const path      = require('path');
 const fs        = require('fs');
 const util      = require('util');
-const debug     = false;
 
+const debug     = false;
 function debugLog(s)
 {
     /* eslint-disable no-console */
     console.log(s);
     /* eslint-enable no-console */
 }
+
+exports.defaultFilenames = defaultFilenames;
+exports.directoryHasFile = directoryHasFile;
+exports.recursiveFindFile = recursiveFindFile;
+exports.findJakeFileStartingAt = findJakeFileStartingAt;
+
 /**
  * Returns an array of file names that are the default names for jakefiles
  *
  * @return     {array of strings}  Array of filenames
  */
-exports.defaultFilenames = defaultFilenames;
 function defaultFilenames()
 {
     const DEFAULT_JAKEFILES = ['yakefile', 'Yakefile', 'yakefile.js', 'Yakefile.js', 'yakefile.j', 'Yakefile.j'];
@@ -36,7 +41,6 @@ function defaultFilenames()
  * @param      {array of string}    arrayOfFileNames  The array of file names
  * @return     {string | undefined} returns the filename is successful else undefined
  */
-exports.directoryHasFile = directoryHasFile;
 function directoryHasFile(/* String*/ aDirectory, arrayOfFileNames)
 {
     if (debug) debugLog(`directoryHasFile dir: ${aDirectory}, filenames: ${util.inspect(arrayOfFileNames)}`);
@@ -82,8 +86,6 @@ function directoryHasFile(/* String*/ aDirectory, arrayOfFileNames)
  * @param   {array of strings}                  arrayOfFileNames  The array of file names
  * @return  {string | undefined}                full path of the jakefile that was found or undefined if none found
  */
-
-exports.recursiveFindFile = recursiveFindFile;
 function recursiveFindFile(aDirectory, arrayOfFileNames)
 {
     if (debug) debugLog(`recursiveFindFile dir: ${aDirectory}, filenames: ${util.inspect(arrayOfFileNames)}`);
@@ -112,7 +114,6 @@ function recursiveFindFile(aDirectory, arrayOfFileNames)
  * Searches directories recursively upwards to find a jakefile with
  * one of the default names
  */
-exports.findJakeFileStartingAt = findJakeFileStartingAt;
 function findJakeFileStartingAt(aDirectory)
 {
     return recursiveFindFile(aDirectory, defaultFilenames());

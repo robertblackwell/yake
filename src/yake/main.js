@@ -11,6 +11,8 @@ const process   = require('process');
 
 
 exports.Main = Main;
+exports.yakeFileMain = yakeFileMain;
+
 function Main(argv, cwd, mode = MODE.yakeTaskfile, cfgArray = undefined)
 {
     let collection;
@@ -92,7 +94,6 @@ function Main(argv, cwd, mode = MODE.yakeTaskfile, cfgArray = undefined)
  * 			yake -f yakefile
  * 			yake ... default yakefile
  */
-exports.yakeFileMain = yakeFileMain;
 function yakeFileMain()
 {
     Main(MODE.yakeCmd);

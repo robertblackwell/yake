@@ -10,7 +10,7 @@ function debugLog(s)
     console.log(s);
     /* eslint-ensable no-console */
 }
-
+debugger;
 /**
  * Quick reference for this file
  * ===============================
@@ -69,6 +69,8 @@ function debugLog(s)
  * @return     {CliOption}              new CliOptions object
  */
 module.exports.CliOptions = CliOptions;
+module.exports.CliArguments = CliArguments;
+module.exports.CliStripNodejake = CliStripNodeJake;
 function CliOptions(options)
 {
     const _options = {};
@@ -145,7 +147,6 @@ function CliOptions(options)
  * @param      {array of strings}   argsArray  The arguments array
  * @return     {CliArguments}       new CliArguments object
  */
-module.exports.CliArguments = CliArguments;
 function CliArguments(argsArray)
 {
     let obj;
@@ -174,7 +175,6 @@ function CliArguments(argsArray)
  *  -   1.  node jake ....., or
  *  -   2.  jake ......
  */
-module.exports.CliStripNodejake = CliStripNodeJake;
 function CliStripNodeJake(argv)
 {
     const nodeRegex = /^(.*)\/node$/;
@@ -275,8 +275,6 @@ function ParseWithConfig(config, argv)
     try
     {
         const opts = parser.parse(argv, 2);
-
-        this.options = opts;
         const innerOptions = parser.options;
         const keyValues = {};
         /**
@@ -318,6 +316,8 @@ function ParseWithConfig(config, argv)
     }
     catch (e)
     {
+        debugger;
+        console.log(e.stack);
         raiseError(`Command Line Parser found an error: ${e.message}`);
         console.error('Command Line Parser found an error: %s', e.message);
         process.exit(1);

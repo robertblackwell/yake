@@ -1,11 +1,12 @@
-const Tasks 	= require('./yake/tasks.js');
+const TASKS 	= require('./yake/tasks.js');
 const TC 		= require('./yake/task_collection.js');
-const Main 		= require('./yake/main.js');
+const MAIN 		= require('./yake/main.js');
 const Logger 	= require('./yake/logger.js');
-const Shell 	= require('./yake/shell.js');
-const YakeError = require('./yake/error.js');
+const SHELL 	= require('./yake/shell.js');
+const YERROR    = require('./yake/error.js');
 const MODE 		= require('./yake/mode.js');
-const raiseError = require('./yake/error.js').raiseError;
+
+const raiseError = YERROR.raiseError;
 
 /**
  * This file exports the functions used in a jakefile to define tasks and add descriptions to those tasks.
@@ -22,7 +23,7 @@ const raiseError = require('./yake/error.js').raiseError;
 exports.task = task;
 function task()
 {
-    const args = Tasks.normalizeArguments.apply(this, arguments);
+    const args = TASKS.normalizeArguments.apply(this, arguments);
 
     if (args === undefined)
         { raiseError(`_Yake.js::task args undefined arguments: ${arguments}`); }
@@ -31,14 +32,14 @@ function task()
      * @NOTE - using a global - see notes in tasks.js for explanation
      *
      */
-    const tc = Tasks.globals.globalTaskCollection;
+    const tc = TASKS.globals.globalTaskCollection;
     
-    const tc2 = Tasks.defineTask(tc, args.name, args.description, args.prereqs, args.action);
+    const tc2 = TASKS.defineTask(tc, args.name, args.description, args.prereqs, args.action);
     /**
      * @NOTE - using a global - see notes in tasks.js for explanation
      *
      */    
-     Tasks.globals.globalTaskCollection = tc2;
+     TASKS.globals.globalTaskCollection = tc2;
 
 }
 /**
@@ -57,9 +58,9 @@ function abort(message, returnCode = -1)
 exports.run = run;
 function run(mode = MODE.yakeTaskfile, cfg = undefined)
 {
-    Main.Main(undefined, undefined, mode, cfg);
+    MAIN.Main(undefined, undefined, mode, cfg);
 }
 
 
-Object.assign(exports, Logger, Shell, YakeError, MODE);
+Object.assign(exports, Logger, SHELL, YERROR, MODE);
 

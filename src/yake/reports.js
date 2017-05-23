@@ -2,6 +2,7 @@
 const chalk = require('chalk');
 
 exports.printTaskList = printTaskList;
+
 function printTaskList(collection)
 {
     const names = collection.getAllNames();

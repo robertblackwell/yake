@@ -1,8 +1,10 @@
 const chalk = require('chalk');
 
 exports.logger = {};
-
 exports.logger.log = log;
+exports.logger.warn = warn;
+exports.logger.error = error;
+
 function log(msg)
 {
 	/* eslint-disable no-console */
@@ -10,14 +12,12 @@ function log(msg)
 	/* eslint-enable no-console */
 }
 
-exports.logger.warn = warn;
 function warn(msg)
 {
 	/* eslint-disable no-console */
     console.log(chalk.reset.yellow(msg));
 	/* eslint-enable no-console */
 }
-exports.logger.error = error;
 function error(msg)
 {
 	/* eslint-disable no-console */

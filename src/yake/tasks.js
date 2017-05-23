@@ -1,9 +1,9 @@
 const util = require('util');
 
-const TaskCollection = require('./task_collection.js');
-const TC = TaskCollection;
-const InvocationList = require('./invocation_list.js').InvocationList;
-const ERROR          = require('./error.js');
+const TC                = require('./task_collection.js');
+const IC                = require('./invocation_list.js');
+const InvocationList    = IC.InvocationList;
+const ERROR             = require('./error.js');
 /**
  * This file contains functions and object related to the loading of the jakefile
  */
@@ -16,7 +16,29 @@ function debugLog(s)
     /* eslint-enable no-console */
 }
 
+/**
+ * globals.globalTaskCollection - used for communicating
+ * intermediate values of a taskCollection
+ * between requireTask in this file and  defineTask as called from
+ * the task function in ./lib/yake.js 
+ *
+ * @type       {<type>}
+ */
+let globals = {
+    globalTaskCollection : undefined,
+}
+
+exports.globals = globals;
+
 exports.Task = Task;
+exports.invokeTask = invokeTask;
+exports._invokeTask = _invokeTask;
+exports.normalizeArguments = normalizeArguments;
+exports.loadPreloadedTasks = loadPreloadedTasks;
+exports.loadTasksFromArray = loadTasksFromArray;
+exports.requireTasks = requireTasks;
+exports.defineTask = defineTask;
+
 function Task(name, description, prerequisites, action)
 {
     let obj;
@@ -86,13 +108,12 @@ Task.copy = function TaskCopy(task)
     return Task(task.name(), task.description(), task.prerequisites(), task.action());
 }
 
-exports.invokeTask = invokeTask;
 function invokeTask(taskCollection, task)
 {
-    const loopsList = InvocationList();
-    const alreadyDoneList = InvocationList();
+    let loopsSet = Set();
+    let alreadyDoneSet = Set();
 
-    _invokeTask(taskCollection, loopsList, alreadyDoneList, task);
+    _invokeTask(taskCollection, loopsSet, alreadyDoneSet, task);
 }
 
 /**
@@ -101,13 +122,13 @@ function invokeTask(taskCollection, task)
  *              Depth-First-Scan of the dependency tree/graph (its a directed graph)
  *
  * @param {TaskCollection}  taskCollection, collection of defined tasks
- * @param {InvocationList}  loopsList, a set structure for keeping track of
+ * @param {Set}             loopsSet, a set structure for keeping track of
  *                          ancestors in the Depth First scan of tasks
  *                          so that loops in the dependency graph can be detected.
  *                          If a task is visited and found to be already in
  *                          this set then a loop has been detected and
  *                          the process fails with an error message
- * @param {InvocationList}  prereqsList - a structure for keeping track of
+ * @param {Set}             alreadyDoneSet - a structure for keeping track of
  *                          prereqs already executed so that we done run a prereq twice.
  *                          The way this works a dependency that is in the dependency tree
  *                          more than once will be invoked at its deepest level
@@ -116,8 +137,7 @@ function invokeTask(taskCollection, task)
  * @param {Task}            task - the task to invoke
  *
  */
-exports._invokeTask = _invokeTask;
-function _invokeTask(taskCollection, loopsList, alreadyDoneList, task)
+function _invokeTask(taskCollection, loopsSet, alreadyDoneSet, task)
 {
     const debug = false;
 
@@ -126,14 +146,14 @@ function _invokeTask(taskCollection, loopsList, alreadyDoneList, task)
 
     const prereqs = task.prerequisites();
 
-    if (loopsList.hasTask(task))
+    if (loopsSet.has(task.name()))
     {
         // do not use raiseError - this will stuff up mocha testing of this feature
         throw new Error(`circular dependency - task:${task.name()} has already been seen`);
     }
     else
     {
-        loopsList.addTask(task);
+        loopsSet.add(task.name());
         if (prereqs.length > 0)
         {
             if (debug) debugLog(`invokeTasks prereqs 1 length:${prereqs.length}`);
@@ -149,16 +169,16 @@ function _invokeTask(taskCollection, loopsList, alreadyDoneList, task)
                 else
                 {
                     if (debug) debugLog(`invokeTask: prereqs ${t.name()}`);
-                    _invokeTask(taskCollection, loopsList, alreadyDoneList, t);
+                    _invokeTask(taskCollection, loopsSet, alreadyDoneSet, t);
                 }
             });
         }
-        if (!alreadyDoneList.hasTask(task))
+        if (!alreadyDoneSet.has(task.name()))
         {
             (task.action())();
-            alreadyDoneList.addTask(task);
+            alreadyDoneSet.add(task.name());
         }
-        loopsList.removeTask(task);
+        loopsSet.delete(task.name());
     }
 }
 
@@ -182,7 +202,6 @@ function _invokeTask(taskCollection, loopsList, alreadyDoneList, task)
  * @return {object}             with keys name, description, prerequisites, action
  *
  */
-exports.normalizeArguments = normalizeArguments;
 function normalizeArguments()
 {
     const a = arguments;
@@ -263,7 +282,6 @@ function normalizeArguments()
  * @global - updates singelton TaskCollection
  *
  */
-exports.loadTasksFromArray = loadTasksFromArray;
 function loadTasksFromArray(ar, taskCollection)
 {
     let tc = taskCollection.copy();
@@ -283,7 +301,6 @@ function loadTasksFromArray(ar, taskCollection)
  *
  *  @return {TaskCollection}    the same one that was passed in but updated
  */
-exports.loadPreloadedTasks = loadPreloadedTasks;
 function loadPreloadedTasks(taskCollection)
 {
     const preTasks = [
@@ -303,19 +320,6 @@ function loadPreloadedTasks(taskCollection)
 
     return collection;
 }
-/**
- * globals.globalTaskCollection - used for communicating
- * intermediate values of a taskCollection
- * between requireTask in this file and  defineTask as called from
- * the task function in ./lib/yake.js 
- *
- * @type       {<type>}
- */
-let globals = {
-    globalTaskCollection : undefined,
-}
-exports.globals = globals;
-
 
 /**
  * Loads tasks from a yakefile into taskCollection and returns the updated taskCollection.
@@ -326,7 +330,6 @@ exports.globals = globals;
  *
  * @return {TaskCollection}     update taskCollection
  */
-exports.requireTasks = requireTasks;
 function requireTasks(yakefile, taskCollection)
 {
     const debug = false;
@@ -338,7 +341,7 @@ function requireTasks(yakefile, taskCollection)
     require(yakefile);
     /* eslint-disable global-require */
     
-    newTaskCollection = globals.globalTaskCollection;
+    const newTaskCollection = globals.globalTaskCollection;
 
     return newTaskCollection; // no copy - untidy functional programming
 }
@@ -360,7 +363,6 @@ function requireTasks(yakefile, taskCollection)
  * @return a collection with the additional task
  * 
  */
-exports.defineTask = defineTask;
 function defineTask(taskCollection, name, description, prereqs, action)
 {
     const immutable = true;

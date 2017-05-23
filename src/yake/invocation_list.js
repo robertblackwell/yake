@@ -1,8 +1,3 @@
-// const util = require('util');
-// const xSet = require('es6-set');
-
-// const Task = require('./tasks.js');
-
 /**
  * InvocationList - is actually a set implementation and is used for two purposes in this app.
  * It is used to track prerequisite ancestors and already invoked tasks
@@ -19,27 +14,32 @@
 module.exports.InvocationList = InvocationList;
 function InvocationList()
 {
-    let obj;
 
-    if (!(this instanceof InvocationList))
-    {
-        obj = new InvocationList();
+    const obj = new Set();
 
-        return obj;
-    }
+    // obj.prototype.remove = obj.prototype.delete;
+    return obj;
+ //    let obj;
 
-    this._set = new Set([]);
+ //    if (!(this instanceof InvocationList))
+ //    {
+ //        obj = new InvocationList();
 
-    this.addTask = function addTask(task)
-	{
-        this._set.add(task.name());
-    };
-    this.hasTask = function hasTask(task)
-	{
-        return this._set.has(task.name());
-    };
-    this.removeTask = function removeTask(task)
-	{
-        return this._set.delete(task.name());
-    };
+ //        return obj;
+ //    }
+
+ //    this._set = new Set([]);
+
+ //    this.add = function add(task)
+	// {
+ //        this._set.add(task.name());
+ //    };
+ //    this.has = function has(task)
+	// {
+ //        return this._set.has(task.name());
+ //    };
+ //    this.remove = function remove(task)
+	// {
+ //        return this._set.delete(task.name());
+ //    };
 }

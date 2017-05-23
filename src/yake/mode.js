@@ -6,7 +6,7 @@
 */
 
 // these are destinguished by an enumerated typeof - correspondingly
-exports.MODE = {
+module.exports.MODE = {
     yakeCmd : 'yake_cmd',
     yakeFromArray : 'yake_from_array',
     yakeTaskfile : 'yake_taskfile',

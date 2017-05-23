@@ -1,5 +1,8 @@
 const util = require('util');
 const TASK = require('./tasks.js');
+
+exports.TaskCollection = TaskCollection;
+ 
 /**
  * TaskCollection - an instance of this structure holds tasks that have already been defined
  * and from which some can be invoked.
@@ -13,7 +16,6 @@ const TASK = require('./tasks.js');
  * @class      TaskCollection
  * @param   {array of Tasks}        Can initialize a TaskCollection from an array of tasks
  */
- exports.TaskCollection = TaskCollection;
 function TaskCollection(arrayOfTasks = undefined)
 {
     let obj;
@@ -102,21 +104,3 @@ function TaskCollection(arrayOfTasks = undefined)
 		/* eslint-enable no-console */
     };
 }
-
-
-
-/**
- * @NOTE - TaskCollection is a singleton. In the jake/Ruby style of task definition an instance of
- * TaskCollection needs to exist during the process of defining tasks and there is nowhere
- * other than a global to hold the collection as it is being built. This is a result of the
- * tasks being defined by 'require'-ing a javascript file.
- *
- */
-// const theInstance = TaskCollection();
-
-// exports.getInstance = getInstance;
-// function getInstance()
-// {
-//     return theInstance;
-// }
-

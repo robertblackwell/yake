@@ -2,7 +2,7 @@ const util = require('util');
 const chai = require('chai');
 const path = require('path');
 
-const JF = require('../src/yake/yakefile.js');
+const YF = require('../src/yake/yakefile.js');
 
 describe('yakefile', function(done)
 {
@@ -10,14 +10,14 @@ describe('yakefile', function(done)
 	{
 		it('defaults', function(done)
 		{
-			// console.log(JF.defaultFilenames());
-			chai.expect(Array.isArray(JF.defaultFilenames())).equal(true);
-			chai.expect(JF.defaultFilenames().length).equal(6);
+			// console.log(YF.defaultFilenames());
+			chai.expect(Array.isArray(YF.defaultFilenames())).equal(true);
+			chai.expect(YF.defaultFilenames().length).equal(6);
 			done();
 		});
 		it('find cwd', function(done)
 		{
-			chai.expect((JF.directoryHasFile(path.resolve(__dirname, "data/sub1"), JF.defaultFilenames() ))).equal('yakefile.js');
+			chai.expect((YF.directoryHasFile(path.resolve(__dirname, "data/sub1"), YF.defaultFilenames() ))).equal('yakefile.js');
 			done();
 		});
 	});	
@@ -27,7 +27,7 @@ describe('yakefile', function(done)
 		{
 			let dir = path.resolve(__dirname, 'data/sub1');
 			let fp = path.resolve(__dirname, 'data/sub1/yakefile.js');
-			let tmp = JF.recursiveFindFile(path.resolve(__dirname, "data/sub1/sub2/sub3"), JF.defaultFilenames() );
+			let tmp = YF.recursiveFindFile(path.resolve(__dirname, "data/sub1/sub2/sub3"), YF.defaultFilenames() );
 			chai.expect(tmp).equal(fp);
 			done();
 		});
@@ -41,7 +41,7 @@ describe('yakefile', function(done)
 
 			let dir = path.resolve(__dirname, 'data/sub1');
 			
-			let tmp = JF.findJakeFileStartingAt(startDir);
+			let tmp = YF.findJakeFileStartingAt(startDir);
 			chai.expect(tmp).equal(fp);
 			done();
 		});
