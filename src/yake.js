@@ -51,14 +51,13 @@ function task()
  */
  function watch(glob, taskName)
  {
-    var watcher = chokidar.watch
-    (
-        glob,
-        {persistent: true,} 
-    );
-    watcher.on('all', (event, path)=>
+    var watcher = chokidar.watch(glob, {persistent: true,});
+    watcher.on('ready', ()=>
     {
-        invokeTask(taskName);
+        watcher.on('all', (event, path)=>
+        {
+            invokeTask(taskName);
+        });
     });
  }
 
