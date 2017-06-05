@@ -1,4 +1,5 @@
 const util = require('util');
+const chokidar = require('chokidar');
 
 const TC                = require('./task_collection.js');
 const ERROR             = require('./error.js');

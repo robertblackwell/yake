@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const YAKE = require("../src/yake/main.js");
-const MODE = require('../src/yake/mode.js').MODE;
 const process = require('process');
-const main = YAKE.Main;
-main(process.argv, process.cwd(), MODE.yakeCmd);
+
+YAKE.yakeFileMain(process.argv, process.cwd());

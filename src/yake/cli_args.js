@@ -11,6 +11,14 @@ function debugLog(s)
     /* eslint-ensable no-console */
 }
 debugger;
+
+module.exports.CliOptions = CliOptions;
+module.exports.CliArguments = CliArguments;
+module.exports.CliStripNodejake = CliStripNodeJake;
+module.exports.CliParse = CliParse;
+module.exports.taskFileParse = taskFileParse;
+module.exports.yakeFileParse = CliParse;
+
 /**
  * Quick reference for this file
  * ===============================
@@ -68,9 +76,7 @@ debugger;
  * @param      {object of key: values}  options  The object of key/values that was parsed from the command line
  * @return     {CliOption}              new CliOptions object
  */
-module.exports.CliOptions = CliOptions;
-module.exports.CliArguments = CliArguments;
-module.exports.CliStripNodejake = CliStripNodeJake;
+
 function CliOptions(options)
 {
     const _options = {};
@@ -172,8 +178,8 @@ function CliArguments(argsArray)
 /**
  * Function Cli.StripNodeJake possibly removes entries from the start of an array
  * if the look like an invocation of the form
- *  -   1.  node jake ....., or
- *  -   2.  jake ......
+ *  -   1.  node yake ....., or
+ *  -   2.  yake ......
  */
 function CliStripNodeJake(argv)
 {
@@ -210,19 +216,28 @@ function CliStripNodeJake(argv)
     return argNoNodeNoYake;
 }
 
-/**
- * CliParse is a function that parses an array of command line options and arguments against the configuration
- * used by the jake build utility. The config is built into the function.
- *
- * @param       {array}                             argv - an array of command line options and arguments
- *                                                  as returned by process.argv
- * @return     {tuple(CliOptions, CliAruments)}     returns 2 values via an array.length = 2
- *
- */
-module.exports.CliParse = CliParse;
-function CliParse(argv)
+function yakeFileConfig()
 {
-    const config = [
+    const a = [        
+        {
+            names : ['yakefile', 'c'],
+            type : 'string',
+            help : 'File containing task definitions',
+            helpArg : 'FILE',
+        },
+        {   names : ['file', 'f'],
+            type : 'string',
+            help : 'File containing task definitions',
+            helpArg : 'FILE',
+        },
+    ];
+    const b = a.concat(taskFileConfig());
+    return b;
+}
+
+function taskFileConfig()
+{
+    const c = [
         {
             names : ['showTasks', 'T'],
             type : 'bool',
@@ -243,23 +258,33 @@ function CliParse(argv)
             type : 'bool',
             help : 'Silent output. ',
         },
-        {
-            names : ['file', 'f'],
-            type : 'string',
-            help : 'File containing task definitions',
-            helpArg : 'FILE',
-        },
-        {
-            names : ['yakefile', 'c'],
-            type : 'string',
-            help : 'File containing task definitions',
-            helpArg : 'FILE',
-        },
     ];
-    const result = ParseWithConfig(config, argv);
+    return c;
+}
+
+/**
+ * CliParse is a function that parses an array of command line options and arguments against the configuration
+ * used by the jake build utility. The config is built into the function.
+ *
+ * @param       {array}                             argv - an array of command line options and arguments
+ *                                                  as returned by process.argv
+ * @return     {triple(CliOptions, CliAruments, helpText)}     returns 3 values via an array.length = 3
+ *
+ */
+function CliParse(argv)
+{
+    const result = ParseWithConfig(yakeFileConfig(), argv);
 
     return result;
 }
+function taskFileParse(argv)
+{
+    const result = ParseWithConfig(taskFileConfig(), argv);
+
+    return result;
+}
+
+
 /**
  * ParseWithConfig - A function that parses an array of command line options and arguments
  *
@@ -271,6 +296,7 @@ function ParseWithConfig(config, argv)
 {
     const debug = false;
     const parser = dashdash.createParser({ options : config });
+    const helpText = parser.help({ includeEnv : true }).trimRight();
 
     try
     {
@@ -300,19 +326,8 @@ function ParseWithConfig(config, argv)
         const cliArgs = CliArguments(opts._args);
 
         if (debug) debugLog(util.inspect(cliOptions.getOptions()));
-        if (cliOptions.getValueFor('help') !== undefined)
-        {
-            const help = parser.help({ includeEnv : true }).trimRight();
-            /* eslint-disable no-console */
 
-            console.log(`${'usage: jake [OPTIONS]\n'
-                        + 'options:\n'}${
-                         help}`);
-            /* eslint-enable no-console */
-            process.exit(0);
-        }
-
-        return [cliOptions, cliArgs];
+        return [cliOptions, cliArgs, helpText];
     }
     catch (e)
     {
