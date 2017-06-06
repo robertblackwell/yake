@@ -12,7 +12,7 @@ yake.task('default', "the default task", [], function()
 
 yake.task('task1', 'this is the first task that is not the default', [], function()
 {
-	yake.log('This is task 1');
+	// yake.log('This is task 1');
 	yake.exec('ls -al /');
 })
 
@@ -32,6 +32,11 @@ yake.task('task3', 'this is a task that watches files', [], function()
 {
 	const files = path.resolve(__dirname, "files/*.js");
 	yake.watch(files, 'task1');
+})
+
+yake.task('task4', 'execute a command that fails', [], function()
+{
+	yake.exec('cat fred');
 })
 
 

@@ -10,6 +10,7 @@ const process   = require('process');
 // const util 		= require('util');
 const fs        = require('fs');
 const path      = require('path');
+const chalk     = require('chalk');
 exports.yakeFileMain = yakeFileMain;
 exports.taskFileMain = taskFileMain;
 
@@ -149,8 +150,8 @@ function tryRunTask(args, collection)
         // console.log('ERROR');
         ERROR.raiseError(`task ${nameOfTaskToRun} not found`);
     }
-
     TASKS.invokeTask(collection, firstTask);
+    // console.log(chalk.white.bold(`${firstTask.name()} - completed `) + chalk.green.bold('OK'));
 }
 function loadPackageJson()
 {

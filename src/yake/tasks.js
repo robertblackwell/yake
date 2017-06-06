@@ -1,6 +1,6 @@
-const util = require('util');
-const chokidar = require('chokidar');
-
+const util      = require('util');
+const chokidar  = require('chokidar');
+const chalk     = require('chalk');
 const TC                = require('./task_collection.js');
 const ERROR             = require('./error.js');
 
@@ -175,8 +175,36 @@ function _invokeTask(taskCollection, loopsSet, alreadyDoneSet, task)
         }
         if (!alreadyDoneSet.has(task.name()))
         {
-            (task.action())();
-            alreadyDoneSet.add(task.name());
+            let result;
+            try
+            {
+                /**
+                 * task actions indicate failure by either 
+                 *  -    return a non-zero
+                 *  -   throw an error
+                 *  consequently success is indicated by
+                 *      -   a return of zero
+                 *      -   a return if undefined -- dont want to force action functions to return a value 
+                 */
+                result = (task.action())();
+                if( result === 0 || result === undefined)
+                {
+                    console.log(chalk.white.bold(`${task.name()} - complete [`)+chalk.bold.green(`OK`)+chalk.white.bold(`]`));
+                }
+                else
+                {
+                    console.log(chalk.white.bold(`${task.name()} - `) + chalk.bold.red(`failed[${result}]`));  
+                    process.exit(1);                  
+                }
+                alreadyDoneSet.add(task.name());
+            }
+            catch(e)
+            {
+                console.log(chalk.white.bold(`${task.name()} - `) + chalk.bold.red(`failed`));                    
+                console.log(chalk.reset(e.stack));
+                process.exit(1); // sledge hammer
+                throw e;    
+            }
         }
         loopsSet.delete(task.name());
     }
